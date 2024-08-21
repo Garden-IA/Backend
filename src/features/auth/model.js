@@ -11,14 +11,14 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    firstName: { type: String, required: false },
-    lastName: { type: String, required: false },
+    firstName: { type: String, required: false, lowercase: true, trim: true },
+    lastName: { type: String, required: false, lowercase: true, trim: true },
     active: { type: Boolean, default: true }, // Valor por defecto: true
     roles: { type: [String], default: ['user'] }, // Valor por defecto: ['user']
     profilePicture: { type: String, required: false },
     lastLogin: { type: Date, default: null }, // Valor por defecto: null
-    bio: { type: String, required: false },
-    phoneNumber: { type: String, required: false },
+    bio: { type: String, required: false, lowercase: true, trim: true },
+    phoneNumber: { type: String, required: false, lowercase: true, trim: true },
   },
   {
     timestamps: true, // Añade campos createdAt y updatedAt automáticamente

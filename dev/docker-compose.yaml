@@ -1,0 +1,29 @@
+version: '3.8'
+name: 'gardenia_mongodb_dev'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo-net
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/
+    networks:
+      - mongo-net
+
+volumes:
+  mongo-data:
+
+networks:
+  mongo-net:
+    driver: bridge

@@ -10,6 +10,7 @@ services:
       - mongo-data:/data/db
     networks:
       - mongo-net
+    restart: 'unless-stopped'
 
   mongo-express:
     image: mongo-express:latest
@@ -20,6 +21,7 @@ services:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/
     networks:
       - mongo-net
+    restart: 'unless-stopped'
 
 volumes:
   mongo-data:

@@ -1,10 +1,9 @@
-name: CI/CD for Docker Image
+name: CI/CD for Docker Images
 
 on:
   push:
     branches:
       - release/*
-
   pull_request:
     branches:
       - dev
@@ -13,7 +12,6 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -35,8 +33,12 @@ jobs:
             echo "TAG=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
           fi
 
-      - name: Build Docker image
-        run: docker build -t jsisques/gardenia-backend:${{ env.TAG }} .
+      - name: Build and Push Docker Image (Standard Node.js)
+        run: |
+          docker build -f Dockerfile -t gardenia-backend:${{ env.TAG }} .
+          docker push jsisques/gardenia-backend:${{ env.TAG }}
 
-      - name: Push Docker image to Docker Hub
-        run: docker push jsisques/gardenia-backend:${{ env.TAG }}
+      - name: Build and Push Docker Image (Alpine Node.js)
+        run: |
+          docker build -f Dockerfile-alpine -t gardenia-backend:alpine-${{ env.TAG }} .
+          docker push jsisques/gardenia-backend:alpine-${{ env.TAG }}

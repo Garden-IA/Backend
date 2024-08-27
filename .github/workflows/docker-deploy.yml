@@ -18,9 +18,7 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
-        env:
-          MONGO_INITDB_DATABASE: testdb
-        options: --health-cmd "nc -z localhost 27017" --health-interval 10s --health-timeout 5s --health-retries 3
+        options: --health-cmd "nc -z localhost 27017" --health-interval 10s --health-timeout 60s --health-retries 10
 
     steps:
       - name: Checkout repository

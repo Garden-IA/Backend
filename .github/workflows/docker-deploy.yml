@@ -13,6 +13,15 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_DATABASE: testdb
+        options: --health-cmd "nc -z localhost 27017" --health-interval 10s --health-timeout 5s --health-retries 3
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,6 +35,8 @@ jobs:
         run: npm install
 
       - name: Run tests
+        env:
+          MONGODB_URI: mongodb://localhost:27017/testdb
         run: npm test
 
   build-and-push:

@@ -4,8 +4,16 @@ const User = require('./model');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../../config/authConfig');
 const logger = require('../../config/logger');
 
+/**
+ * Registra un nuevo usuario.
+ *
+ * @param {string} email - El correo electrónico del nuevo usuario.
+ * @param {string} password - La contraseña del nuevo usuario.
+ * @returns {Promise<User>} - Una promesa que resuelve con el nuevo usuario registrado.
+ * @throws {Error} - Si ya existe un usuario con el correo electrónico proporcionado.
+ */
 exports.register = async (email, password) => {
-  logger.info(`service.js | Entrando en la función register()`);
+  logger.info('service.js | Entrando en la función register()');
 
   // Verificar si ya existe un usuario con este email
   const existingUser = await User.findOne({ email });
@@ -23,8 +31,16 @@ exports.register = async (email, password) => {
   return newUser.save();
 };
 
+/**
+ * Inicia sesión de un usuario y genera un token JWT.
+ *
+ * @param {string} email - El correo electrónico del usuario.
+ * @param {string} password - La contraseña del usuario.
+ * @returns {Promise<Object>} - Una promesa que resuelve con un objeto que contiene los detalles del usuario y el token JWT.
+ * @throws {Error} - Si el usuario no se encuentra o las credenciales son inválidas.
+ */
 exports.login = async (email, password) => {
-  logger.info(`service.js | Entrando en la función login()`);
+  logger.info('service.js | Entrando en la función login()');
 
   // Buscar al usuario por email
   const user = await User.findOne({ email });
@@ -57,6 +73,7 @@ exports.login = async (email, password) => {
  *
  * @param {string} id - El ID del usuario.
  * @returns {Promise<User>} - Una promesa que resuelve con el documento del usuario.
+ * @throws {Error} - Si el usuario no se encuentra.
  */
 exports.getProfile = async id => {
   logger.info(`service.js | Entrando en la función getProfile() con id: ${id}`);
@@ -72,6 +89,14 @@ exports.getProfile = async id => {
   return user;
 };
 
+/**
+ * Actualiza el perfil de un usuario por su ID.
+ *
+ * @param {string} userId - El ID del usuario a actualizar.
+ * @param {Object} updates - Un objeto que contiene los campos a actualizar.
+ * @returns {Promise<User>} - Una promesa que resuelve con el usuario actualizado.
+ * @throws {Error} - Si el usuario no se encuentra.
+ */
 exports.updateProfile = async (userId, updates) => {
   logger.info(`service.js | Entrando en la función updateProfile() con userId: ${userId}`);
 

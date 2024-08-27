@@ -1,0 +1,10 @@
+node_modules
+logs
+docs
+dev
+coverage
+test-results
+.gitignore
+.prettierrc
+CHANGELOG.md
+CHANGELOG.pdf

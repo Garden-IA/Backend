@@ -1,6 +1,20 @@
+/**
+ * @module features/auth/controller
+ * @description Controlador para la gestión de autenticación de usuarios.
+ * Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesión, obtención y actualización del perfil de usuario.
+ */
+
 const authService = require('./service');
 const logger = require('../../config/logger');
 
+/**
+ * Maneja la solicitud para registrar un nuevo usuario.
+ *
+ * @function register
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
 exports.register = async (req, res) => {
   logger.info('controller.js | Entrando en la función register()');
   const { email, password } = req.body;
@@ -19,6 +33,14 @@ exports.register = async (req, res) => {
   }
 };
 
+/**
+ * Maneja la solicitud para iniciar sesión de un usuario.
+ *
+ * @function login
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
 exports.login = async (req, res) => {
   logger.info('controller.js | Entrando en la función login()');
   const { email, password } = req.body;
@@ -37,6 +59,14 @@ exports.login = async (req, res) => {
   }
 };
 
+/**
+ * Maneja la solicitud para obtener el perfil del usuario.
+ *
+ * @function getProfile
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
 exports.getProfile = async (req, res) => {
   logger.info('controller.js | Entrando en la función getProfile()');
   try {
@@ -53,6 +83,14 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+/**
+ * Maneja la solicitud para actualizar el perfil del usuario.
+ *
+ * @function updateProfile
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
 exports.updateProfile = async (req, res) => {
   logger.info('controller.js | Entrando en la función updateProfile()');
   try {

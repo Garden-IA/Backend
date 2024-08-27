@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/plant/service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/plant/service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('./model');
+const { JWT_SECRET, JWT_EXPIRES_IN } = require('../../config/authConfig');
+const logger = require('../../config/logger');
+
+exports.register = async (email, password) => {
+  logger.info(`service.js | Entrando en la función register()`);
+
+  // Verificar si ya existe un usuario con este email
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new Error('User already exists with this email');
+  }
+
+  // Hash de la contraseña
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Crear un nuevo usuario
+  const newUser = new User({ email, password: hashedPassword });
+
+  // Guardar el usuario en la base de datos
+  return newUser.save();
+};
+
+exports.login = async (email, password) => {
+  logger.info(`service.js | Entrando en la función login()`);
+
+  // Buscar al usuario por email
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('User not found');
+
+  // Comparar la contraseña proporcionada con la almacenada
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) throw new Error('Invalid credentials');
+
+  // Crear un token JWT
+  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  logger.debug(`service.js | Token para el usuario ${email}: ${token}`);
+
+  // Actualizar el campo 'lastLogin' con la fecha y hora actual
+  user.lastLogin = Date.now();
+  await user.save();
+
+  // Devolver los detalles del usuario junto con el token
+  return {
+    id: user._id,
+    email: user.email,
+    username: user.username,
+    lastLogin: user.lastLogin, // Incluir el campo 'lastLogin' en la respuesta
+    token: token,
+  };
+};
+
+/**
+ * Obtiene el perfil de un usuario por su ID.
+ *
+ * @param {string} id - El ID del usuario.
+ * @returns {Promise&lt;User>} - Una promesa que resuelve con el documento del usuario.
+ */
+exports.getProfile = async id => {
+  logger.info(`service.js | Entrando en la función getProfile() con id: ${id}`);
+
+  // Buscar el usuario por id
+  const user = await User.findById(id);
+
+  if (!user) {
+    logger.warn(`service.js | Usuario con id ${id} no encontrado`);
+    throw new Error('User not found');
+  }
+
+  return user;
+};
+
+exports.updateProfile = async (userId, updates) => {
+  logger.info(`service.js | Entrando en la función updateProfile() con userId: ${userId}`);
+
+  // Actualizar el usuario por ID
+  const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+  if (!user) throw new Error('User not found');
+
+  return user;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createHouse">createHouse</a></li><li><a href="global.html#createdAt">createdAt</a></li><li><a href="global.html#deleteHouse">deleteHouse</a></li><li><a href="global.html#description">description</a></li><li><a href="global.html#getAllHouses">getAllHouses</a></li><li><a href="global.html#getHouseById">getHouseById</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#location">location</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#rooms">rooms</a></li><li><a href="global.html#updateHouse">updateHouse</a></li><li><a href="global.html#updateProfile">updateProfile</a></li><li><a href="global.html#updatedAt">updatedAt</a></li><li><a href="global.html#validateRegisterInput">validateRegisterInput</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Aug 27 2024 17:48:39 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,5 +1,27 @@
 const mongoose = require('mongoose');
 
+/**
+ * @module features/auth/model
+ * @description Definición del esquema del modelo de usuario para MongoDB utilizando Mongoose.
+ */
+
+/**
+ * Esquema de usuario para el modelo de MongoDB.
+ *
+ * @typedef {Object} UserSchema
+ * @property {String} [username] - Nombre de usuario, opcional, en minúsculas y sin espacios adicionales.
+ * @property {String} password - Contraseña del usuario, obligatoria.
+ * @property {String} email - Correo electrónico del usuario, obligatorio, único, en minúsculas y sin espacios adicionales.
+ * @property {String} [firstName] - Primer nombre del usuario, opcional, en minúsculas y sin espacios adicionales.
+ * @property {String} [lastName] - Apellido del usuario, opcional, en minúsculas y sin espacios adicionales.
+ * @property {Boolean} [active=true] - Estado de activación del usuario, por defecto es `true`.
+ * @property {String[]} [roles=['user']] - Roles del usuario, por defecto contiene `['user']`.
+ * @property {String} [profilePicture] - URL de la imagen de perfil del usuario, opcional.
+ * @property {Date} [lastLogin=null] - Fecha del último inicio de sesión, por defecto es `null`.
+ * @property {String} [bio] - Biografía del usuario, opcional, en minúsculas y sin espacios adicionales.
+ * @property {String} [phoneNumber] - Número de teléfono del usuario, opcional, en minúsculas y sin espacios adicionales.
+ */
+
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: false, unique: false, lowercase: true, trim: true },

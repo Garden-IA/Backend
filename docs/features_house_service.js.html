@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/house/service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/house/service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const House = require('./model'); // Ajusta la ruta según la ubicación del modelo
+const logger = require('../../config/logger');
+
+/**
+ * Crea una nueva casa.
+ *
+ * @param {string} name - El nombre de la casa.
+ * @param {string} location - La ubicación de la casa.
+ * @param {string} [description] - Una descripción opcional de la casa.
+ * @returns {Promise&lt;House>} - Una promesa que resuelve con el objeto de la casa creada.
+ * @throws {Error} - Si ocurre un error al crear la casa.
+ */
+exports.createHouse = async (name, location, description) => {
+  logger.info('service.js | Entrando en la función createHouse()');
+
+  try {
+    // Crear una nueva instancia de House con los datos proporcionados
+    const house = new House({ name, location, description });
+
+    // Guardar la nueva casa en la base de datos
+    await house.save();
+
+    logger.info(`service.js | Casa con nombre ${name} creada con éxito`);
+    return house;
+  } catch (error) {
+    logger.error(`service.js | Error al crear casa con nombre ${name}`);
+    logger.debug(`service.js | Error: ${error.message}`);
+    throw new Error('Error creating house');
+  }
+};
+
+/**
+ * Obtiene todas las casas.
+ *
+ * @returns {Promise&lt;Array&lt;House>>} - Una promesa que resuelve con un array de objetos de casas.
+ * @throws {Error} - Si ocurre un error al recuperar las casas.
+ */
+exports.getAllHouses = async () => {
+  logger.info('service.js | Entrando en la función getAllHouses()');
+
+  try {
+    // Recuperar todas las casas de la base de datos
+    const houses = await House.find();
+
+    logger.info('service.js | Recuperadas todas las casas con éxito');
+    return houses;
+  } catch (error) {
+    logger.error('service.js | Error al recuperar las casas');
+    logger.debug(`service.js | Error: ${error.message}`);
+    throw new Error('Error retrieving houses');
+  }
+};
+
+/**
+ * Obtiene una casa por su ID.
+ *
+ * @param {string} id - El ID de la casa a recuperar.
+ * @returns {Promise&lt;House>} - Una promesa que resuelve con el objeto de la casa encontrada.
+ * @throws {Error} - Si la casa no se encuentra o si ocurre un error al recuperarla.
+ */
+exports.getHouseById = async id => {
+  logger.info(`service.js | Entrando en la función getHouseById() con ID: ${id}`);
+
+  try {
+    // Buscar la casa por ID en la base de datos
+    const house = await House.findById(id);
+
+    if (!house) {
+      logger.warn(`service.js | Casa con ID ${id} no encontrada`);
+      throw new Error('House not found');
+    }
+
+    logger.info(`service.js | Casa con ID ${id} recuperada con éxito`);
+    return house;
+  } catch (error) {
+    logger.error(`service.js | Error al recuperar casa con ID ${id}`);
+    logger.debug(`service.js | Error: ${error.message}`);
+    throw error; // Re-lanzar el error para que el controlador lo maneje
+  }
+};
+
+/**
+ * Actualiza una casa por su ID.
+ *
+ * @param {string} id - El ID de la casa a actualizar.
+ * @param {Object} updates - Los datos de actualización para la casa.
+ * @returns {Promise&lt;House>} - Una promesa que resuelve con el objeto de la casa actualizada.
+ * @throws {Error} - Si la casa no se encuentra o si ocurre un error al actualizarla.
+ */
+exports.updateHouse = async (id, updates) => {
+  logger.info(`service.js | Entrando en la función updateHouse() con ID: ${id}`);
+
+  try {
+    // Actualizar la casa por ID en la base de datos
+    const house = await House.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+
+    if (!house) {
+      logger.warn(`service.js | Casa con ID ${id} no encontrada para actualizar`);
+      throw new Error('House not found');
+    }
+
+    logger.info(`service.js | Casa con ID ${id} actualizada con éxito`);
+    return house;
+  } catch (error) {
+    logger.error(`service.js | Error al actualizar casa con ID ${id}`);
+    logger.debug(`service.js | Error: ${error.message}`);
+    throw error; // Re-lanzar el error para que el controlador lo maneje
+  }
+};
+
+/**
+ * Elimina una casa por su ID.
+ *
+ * @param {string} id - El ID de la casa a eliminar.
+ * @returns {Promise&lt;void>} - Una promesa que se resuelve cuando la casa ha sido eliminada.
+ * @throws {Error} - Si la casa no se encuentra o si ocurre un error al eliminarla.
+ */
+exports.deleteHouse = async id => {
+  logger.info(`service.js | Entrando en la función deleteHouse() con ID: ${id}`);
+
+  try {
+    // Eliminar la casa por ID en la base de datos
+    const house = await House.findByIdAndDelete(id);
+
+    if (!house) {
+      logger.warn(`service.js | Casa con ID ${id} no encontrada para eliminar`);
+      throw new Error('House not found');
+    }
+
+    logger.info(`service.js | Casa con ID ${id} eliminada con éxito`);
+  } catch (error) {
+    logger.error(`service.js | Error al eliminar casa con ID ${id}`);
+    logger.debug(`service.js | Error: ${error.message}`);
+    throw error; // Re-lanzar el error para que el controlador lo maneje
+  }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createHouse">createHouse</a></li><li><a href="global.html#createdAt">createdAt</a></li><li><a href="global.html#deleteHouse">deleteHouse</a></li><li><a href="global.html#description">description</a></li><li><a href="global.html#getAllHouses">getAllHouses</a></li><li><a href="global.html#getHouseById">getHouseById</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#location">location</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#rooms">rooms</a></li><li><a href="global.html#updateHouse">updateHouse</a></li><li><a href="global.html#updateProfile">updateProfile</a></li><li><a href="global.html#updatedAt">updatedAt</a></li><li><a href="global.html#validateRegisterInput">validateRegisterInput</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Aug 27 2024 17:48:39 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 name: CI/CD for Docker Image
-#
+
 on:
   push:
     branches:
@@ -36,7 +36,7 @@ jobs:
           fi
 
       - name: Build Docker image
-        run: docker build -t gardenia-backend:${{ env.TAG }} .
+        run: docker build -t jsisques/gardenia-backend:${{ env.TAG }} .
 
       - name: Push Docker image to Docker Hub
-        run: docker push gardenia-backend:${{ env.TAG }}
+        run: docker push jsisques/gardenia-backend:${{ env.TAG }}

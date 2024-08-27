@@ -49,7 +49,7 @@ jobs:
 
       - name: Build and Push Docker Image (Standard Node.js)
         run: |
-          docker build -f Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
+          docker build -f docker/Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
           docker push jsisques/gardenia-backend:${{ env.TAG }}
         continue-on-error: true
         id: build-push-standard
@@ -67,7 +67,7 @@ jobs:
 
       - name: Build and Push Docker Image (Alpine Node.js)
         run: |
-          docker build -f Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
+          docker build -f docker/Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
           docker push jsisques/gardenia-backend:alpine-${{ env.TAG }}
         continue-on-error: true
         id: build-push-alpine

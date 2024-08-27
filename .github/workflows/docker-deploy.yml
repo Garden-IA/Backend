@@ -31,13 +31,13 @@ jobs:
       - name: Notify Docker Login Status
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ✅ Docker login succeeded at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ✅ Docker login succeeded' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Docker Login Status
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Docker login failed at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ❌ Docker login failed' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Determine tag
         id: determine_tag
@@ -60,13 +60,13 @@ jobs:
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'success'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Built and pushed standard Node.js image successfully at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ✅ Built and pushed standard Node.js image successfully' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'failure'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Failed to build and push standard Node.js image at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ❌ Failed to build and push standard Node.js image' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Build and Push Docker Image (Alpine Node.js)
         run: |
@@ -78,15 +78,15 @@ jobs:
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'success'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Built and pushed Alpine Node.js image successfully at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ✅ Built and pushed Alpine Node.js image successfully' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'failure'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Failed to build and push Alpine Node.js image at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ❌ Failed to build and push Alpine Node.js image' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Completion
         if: success() || failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Workflow completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }} at ${{ env.CURRENT_DATETIME }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }}"} | ✅ Workflow completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}' ${{ secrets.SLACK_WEBHOOK_URL }}

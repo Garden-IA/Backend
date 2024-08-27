@@ -1,4 +1,4 @@
-name: CI/CD Docker Hub
+name: CI/CD for Docker Images
 
 on:
   push:
@@ -18,6 +18,9 @@ jobs:
       - name: Notify Start
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | 🔄 Workflow started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3

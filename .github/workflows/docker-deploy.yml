@@ -11,13 +11,13 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Date and Time
-        id: datetime
-        run: echo "CURRENT_DATETIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
+      - name: Set Start Time
+        id: start_time
+        run: echo "START_TIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
 
       - name: Notify Start
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | 🔄 Workflow started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | 🔄 Workflow started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -31,13 +31,13 @@ jobs:
       - name: Notify Docker Login Status
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Docker login succeeded"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ✅ Docker login succeeded"}' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Docker Login Status
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Docker login failed"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ❌ Docker login failed"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Determine tag
         id: determine_tag
@@ -52,7 +52,7 @@ jobs:
 
       - name: Build and Push Docker Image (Standard Node.js)
         run: |
-          docker build -f docker/Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
+          docker build -f Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
           docker push jsisques/gardenia-backend:${{ env.TAG }}
         continue-on-error: true
         id: build-push-standard
@@ -60,17 +60,17 @@ jobs:
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'success'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Built and pushed standard Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ✅ Built and pushed standard Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'failure'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Failed to build and push standard Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ❌ Failed to build and push standard Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Build and Push Docker Image (Alpine Node.js)
         run: |
-          docker build -f docker/Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
+          docker build -f Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
           docker push jsisques/gardenia-backend:alpine-${{ env.TAG }}
         continue-on-error: true
         id: build-push-alpine
@@ -78,15 +78,28 @@ jobs:
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'success'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Built and pushed Alpine Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ✅ Built and pushed Alpine Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
         continue-on-error: true
 
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'failure'
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Failed to build and push Alpine Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.START_TIME }} | ❌ Failed to build and push Alpine Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Set End Time
+        id: end_time
+        run: echo "END_TIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Calculate Duration
+        id: duration
+        run: |
+          START=$(date -d "${{ env.START_TIME }}" +%s)
+          END=$(date -d "${{ env.END_TIME }}" +%s)
+          DURATION=$((END - START))
+          echo "DURATION=$DURATION" >> $GITHUB_ENV
+          echo "Duration in seconds: $DURATION"
 
       - name: Notify Completion
         if: success() || failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Workflow completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.END_TIME }} | ✅ Workflow completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}. Total execution time: $((DURATION / 60)) minutes and $((DURATION % 60)) seconds."}' ${{ secrets.SLACK_WEBHOOK_URL }}

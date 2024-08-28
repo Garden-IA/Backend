@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         language: ['javascript-typescript']
-        build-mode: ['manual']
+        build-mode: ['none'] # No build required for this project
 
     steps:
       - name: Set Date and Time
@@ -44,9 +44,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build the project
-        run: npm run build # Ajusta este comando según la configuración de tu proyecto
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3

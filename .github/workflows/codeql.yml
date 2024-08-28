@@ -1,11 +1,6 @@
 name: 'CodeQL'
 
 on:
-  push:
-    branches:
-      - release/*
-      - dev
-      - master
   pull_request:
     branches:
       - release/*
@@ -28,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         language: ['javascript-typescript']
-        build-mode: ['autobuild']
+        build-mode: ['manual']
 
     steps:
       - name: Set Date and Time
@@ -50,6 +45,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build the project
+        run: npm run build # Ajusta este comando según la configuración de tu proyecto
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
@@ -65,3 +63,8 @@ jobs:
         if: success() || failure()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ CodeQL analysis completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Analysis Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ CodeQL analysis failed for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}

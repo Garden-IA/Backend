@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 /**
  * @module features/auth/model
@@ -20,8 +21,8 @@ const mongoose = require('mongoose');
  * @property {Date} [lastLogin=null] - Fecha del último inicio de sesión, por defecto es `null`.
  * @property {String} [bio] - Biografía del usuario, opcional, en minúsculas y sin espacios adicionales.
  * @property {String} [phoneNumber] - Número de teléfono del usuario, opcional, en minúsculas y sin espacios adicionales.
+ * @property {Array<Schema.Types.ObjectId>} [houses] - Array de referencias a las casas del usuario.
  */
-
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: false, unique: false, lowercase: true, trim: true },
@@ -41,6 +42,13 @@ const userSchema = new mongoose.Schema(
     lastLogin: { type: Date, default: null }, // Valor por defecto: null
     bio: { type: String, required: false, lowercase: true, trim: true },
     phoneNumber: { type: String, required: false, lowercase: true, trim: true },
+    houses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'House', // Referencia al esquema de casa
+        required: false,
+      },
+    ],
   },
   {
     timestamps: true, // Añade campos createdAt y updatedAt automáticamente

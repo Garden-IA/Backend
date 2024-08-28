@@ -41,6 +41,9 @@ exports.verifyToken = (req, res, next) => {
 
     // Añadir la información del usuario al objeto de solicitud
     req.user = decoded;
+    req.userId = decoded.id;
+    logger.info(`auth.js | Token validado, usuarioID: ${req.userId}`);
+
     next();
   });
 };

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const User = require('../../../../src/features/auth/model');
+const House = require('../../../../src/features/house/model');
 
 describe('User Model', () => {
   it('should create a user with required fields', async () => {
@@ -57,5 +58,36 @@ describe('User Model', () => {
     expect(savedUser.profilePicture).toBe(user.profilePicture);
     expect(savedUser.bio).toBe(user.bio);
     expect(savedUser.phoneNumber).toBe(user.phoneNumber);
+  });
+
+  it('should add and retrieve houses correctly', async () => {
+    // Primero, crea y guarda una casa
+    const house = new House({
+      name: 'Beach House',
+      location: 'California',
+      description: 'A beautiful beach house.',
+    });
+
+    const savedHouse = await house.save();
+
+    // Luego, crea un usuario y asocia la casa
+    const user = new User({
+      username: 'houseuser',
+      password: 'password123',
+      email: 'houseuser@example.com',
+      houses: [savedHouse._id], // Asocia la casa al usuario
+    });
+
+    const savedUser = await user.save();
+
+    // Verifica que la casa se ha asociado al usuario
+    expect(savedUser.houses).toContain(savedHouse._id);
+
+    // Carga el usuario desde la base de datos e incluye las casas pobladas
+    const populatedUser = await User.findById(savedUser._id).populate('houses').exec();
+
+    expect(populatedUser.houses.length).toBe(1);
+    expect(populatedUser.houses[0].name).toBe('Beach House');
+    expect(populatedUser.houses[0].location).toBe('California');
   });
 });

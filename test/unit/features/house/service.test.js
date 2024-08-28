@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
-const House = require('../../../../src/features/house/model'); // Asegúrate de que la ruta es correcta
+const House = require('../../../../src/features/house/model');
 const houseService = require('../../../../src/features/house/service');
-const logger = require('../../../../src/config/logger'); // Asegúrate de que la ruta es correcta
+const logger = require('../../../../src/config/logger');
 
-// Mockear el modelo House y el logger
 jest.mock('../../../../src/features/house/model');
 jest.mock('../../../../src/config/logger');
 
 describe('House Service', () => {
+  const mockId = new mongoose.Types.ObjectId(); // Ejemplo de ObjectId de MongoDB
+
   afterEach(() => {
     jest.clearAllMocks(); // Limpiar los mocks después de cada prueba
   });
@@ -15,7 +16,7 @@ describe('House Service', () => {
   describe('createHouse', () => {
     it('should create a new house and return it', async () => {
       const mockHouse = {
-        _id: new mongoose.Types.ObjectId(),
+        _id: mockId,
         name: 'Test House',
         location: 'Test Location',
         description: 'Test Description',
@@ -51,7 +52,7 @@ describe('House Service', () => {
   describe('getAllHouses', () => {
     it('should return all houses', async () => {
       const mockHouses = [
-        { _id: new mongoose.Types.ObjectId(), name: 'House 1', location: 'Location 1' },
+        { _id: mockId, name: 'House 1', location: 'Location 1' },
         { _id: new mongoose.Types.ObjectId(), name: 'House 2', location: 'Location 2' },
       ];
 
@@ -76,93 +77,93 @@ describe('House Service', () => {
 
   describe('getHouseById', () => {
     it('should return the house if found', async () => {
-      const mockHouse = { _id: new mongoose.Types.ObjectId(), name: 'House 1', location: 'Location 1' };
+      const mockHouse = { _id: mockId, name: 'House 1', location: 'Location 1' };
 
       House.findById.mockResolvedValueOnce(mockHouse);
 
-      const result = await houseService.getHouseById(mockHouse._id);
+      const result = await houseService.getHouseById(mockId);
 
-      expect(House.findById).toHaveBeenCalledWith(mockHouse._id);
+      expect(House.findById).toHaveBeenCalledWith(mockId);
       expect(result).toEqual(mockHouse);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función getHouseById() con ID: ${mockHouse._id}`);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockHouse._id} recuperada con éxito`);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función getHouseById() con ID: ${mockId}`);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} recuperada con éxito`);
     });
 
     it('should throw an error if house is not found', async () => {
       House.findById.mockResolvedValueOnce(null);
 
-      await expect(houseService.getHouseById('invalidId')).rejects.toThrow('House not found');
-      expect(logger.warn).toHaveBeenCalledWith('service.js | Casa con ID invalidId no encontrada');
+      await expect(houseService.getHouseById(mockId)).rejects.toThrow('House not found');
+      expect(logger.warn).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} no encontrada`);
     });
 
     it('should throw an error if retrieval fails', async () => {
       House.findById.mockRejectedValueOnce(new Error('FindById failed'));
 
-      await expect(houseService.getHouseById('invalidId')).rejects.toThrow('FindById failed');
-      expect(logger.error).toHaveBeenCalledWith('service.js | Error al recuperar casa con ID invalidId');
+      await expect(houseService.getHouseById(mockId)).rejects.toThrow('FindById failed');
+      expect(logger.error).toHaveBeenCalledWith(`service.js | Error al recuperar casa con ID ${mockId}`);
       expect(logger.debug).toHaveBeenCalledWith('service.js | Error: FindById failed');
     });
   });
 
   describe('updateHouse', () => {
     it('should update the house and return the updated house', async () => {
-      const mockHouse = { _id: new mongoose.Types.ObjectId(), name: 'Updated House', location: 'Updated Location' };
+      const mockHouse = { _id: mockId, name: 'Updated House', location: 'Updated Location' };
 
       House.findByIdAndUpdate.mockResolvedValueOnce(mockHouse);
 
-      const result = await houseService.updateHouse(mockHouse._id, { name: 'Updated House', location: 'Updated Location' });
+      const result = await houseService.updateHouse(mockId, { name: 'Updated House', location: 'Updated Location' });
 
       expect(House.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockHouse._id,
+        mockId,
         { name: 'Updated House', location: 'Updated Location' },
         { new: true, runValidators: true },
       );
       expect(result).toEqual(mockHouse);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función updateHouse() con ID: ${mockHouse._id}`);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockHouse._id} actualizada con éxito`);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función updateHouse() con ID: ${mockId}`);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} actualizada con éxito`);
     });
 
     it('should throw an error if house is not found for update', async () => {
       House.findByIdAndUpdate.mockResolvedValueOnce(null);
 
-      await expect(houseService.updateHouse('invalidId', { name: 'Updated House' })).rejects.toThrow('House not found');
-      expect(logger.warn).toHaveBeenCalledWith('service.js | Casa con ID invalidId no encontrada para actualizar');
+      await expect(houseService.updateHouse(mockId, { name: 'Updated House' })).rejects.toThrow('House not found');
+      expect(logger.warn).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} no encontrada para actualizar`);
     });
 
     it('should throw an error if update fails', async () => {
       House.findByIdAndUpdate.mockRejectedValueOnce(new Error('Update failed'));
 
-      await expect(houseService.updateHouse('invalidId', { name: 'Updated House' })).rejects.toThrow('Update failed');
-      expect(logger.error).toHaveBeenCalledWith('service.js | Error al actualizar casa con ID invalidId');
+      await expect(houseService.updateHouse(mockId, { name: 'Updated House' })).rejects.toThrow('Update failed');
+      expect(logger.error).toHaveBeenCalledWith(`service.js | Error al actualizar casa con ID ${mockId}`);
       expect(logger.debug).toHaveBeenCalledWith('service.js | Error: Update failed');
     });
   });
 
   describe('deleteHouse', () => {
     it('should delete the house successfully', async () => {
-      const mockHouse = { _id: new mongoose.Types.ObjectId(), name: 'House 1' };
+      const mockHouse = { _id: mockId, name: 'House 1' };
 
       House.findByIdAndDelete.mockResolvedValueOnce(mockHouse);
 
-      await houseService.deleteHouse(mockHouse._id);
+      await houseService.deleteHouse(mockId);
 
-      expect(House.findByIdAndDelete).toHaveBeenCalledWith(mockHouse._id);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función deleteHouse() con ID: ${mockHouse._id}`);
-      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockHouse._id} eliminada con éxito`);
+      expect(House.findByIdAndDelete).toHaveBeenCalledWith(mockId);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Entrando en la función deleteHouse() con ID: ${mockId}`);
+      expect(logger.info).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} eliminada con éxito`);
     });
 
     it('should throw an error if house is not found for deletion', async () => {
       House.findByIdAndDelete.mockResolvedValueOnce(null);
 
-      await expect(houseService.deleteHouse('invalidId')).rejects.toThrow('House not found');
-      expect(logger.warn).toHaveBeenCalledWith('service.js | Casa con ID invalidId no encontrada para eliminar');
+      await expect(houseService.deleteHouse(mockId)).rejects.toThrow('House not found');
+      expect(logger.warn).toHaveBeenCalledWith(`service.js | Casa con ID ${mockId} no encontrada para eliminar`);
     });
 
     it('should throw an error if deletion fails', async () => {
       House.findByIdAndDelete.mockRejectedValueOnce(new Error('Delete failed'));
 
-      await expect(houseService.deleteHouse('invalidId')).rejects.toThrow('Delete failed');
-      expect(logger.error).toHaveBeenCalledWith('service.js | Error al eliminar casa con ID invalidId');
+      await expect(houseService.deleteHouse(mockId)).rejects.toThrow('Delete failed');
+      expect(logger.error).toHaveBeenCalledWith(`service.js | Error al eliminar casa con ID ${mockId}`);
       expect(logger.debug).toHaveBeenCalledWith('service.js | Error: Delete failed');
     });
   });

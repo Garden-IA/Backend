@@ -1,7 +1,10 @@
 const app = require('./app');
 const logger = require('./src/config/logger');
 const connectToDatabase = require('./src/config/database');
-require('dotenv').config();
+
+const path = require('path');
+const envFile = `.env.${process.env.NODE_ENV}`;
+require('dotenv').config({ path: path.resolve(__dirname, envFile) });
 
 const port = process.env.PORT || 3000;
 

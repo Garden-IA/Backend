@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('./model');
-const { JWT_SECRET, JWT_EXPIRES_IN } = require('../../config/authConfig');
+const tokenManager = require('../../utils/tokenManager');
 const logger = require('../../config/logger');
 
 /**
@@ -51,7 +51,7 @@ exports.login = async (email, password) => {
   if (!isMatch) throw new Error('Invalid credentials');
 
   // Crear un token JWT
-  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  const token = tokenManager.generateToken(user);
   logger.debug(`service.js | Token para el usuario ${email}: ${token}`);
 
   // Actualizar el campo 'lastLogin' con la fecha y hora actual

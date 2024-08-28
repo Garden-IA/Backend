@@ -1,7 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="60" failures="4" errors="0" time="10.696">
-  <testsuite name="House Controller" errors="0" failures="2" skipped="0" timestamp="2024-08-28T14:19:22" time="4.189" tests="14">
-    <testcase classname="House Controller createHouse should create a new house successfully" name="House Controller createHouse should create a new house successfully" time="0.019">
+<testsuites name="jest tests" tests="90" failures="17" errors="0" time="16.442">
+  <testsuite name="House Service" errors="0" failures="1" skipped="0" timestamp="2024-08-28T15:23:45" time="5.496" tests="13">
+    <testcase classname="House Service createHouse should create a new house and return it" name="House Service createHouse should create a new house and return it" time="0.132">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 7
++ Received  + 1
+
+- Object {
+-   &quot;_id&quot;: &quot;66cf410699bd0aa0da4bedc6&quot;,
+-   &quot;description&quot;: &quot;Test Description&quot;,
+-   &quot;location&quot;: &quot;Test Location&quot;,
+-   &quot;name&quot;: &quot;Test House&quot;,
+-   &quot;save&quot;: [Function mockConstructor],
+- }
++ Object {}
+    at Object.toEqual (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\house\service.test.js:36:22)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+    <testcase classname="House Service createHouse should throw an error if house creation fails" name="House Service createHouse should throw an error if house creation fails" time="0.031">
+    </testcase>
+    <testcase classname="House Service getAllHouses should return all houses" name="House Service getAllHouses should return all houses" time="0.003">
+    </testcase>
+    <testcase classname="House Service getAllHouses should throw an error if retrieval fails" name="House Service getAllHouses should throw an error if retrieval fails" time="0.003">
+    </testcase>
+    <testcase classname="House Service getHouseById should return the house if found" name="House Service getHouseById should return the house if found" time="0.003">
+    </testcase>
+    <testcase classname="House Service getHouseById should throw an error if house is not found" name="House Service getHouseById should throw an error if house is not found" time="0.004">
+    </testcase>
+    <testcase classname="House Service getHouseById should throw an error if retrieval fails" name="House Service getHouseById should throw an error if retrieval fails" time="0.009">
+    </testcase>
+    <testcase classname="House Service updateHouse should update the house and return the updated house" name="House Service updateHouse should update the house and return the updated house" time="0.003">
+    </testcase>
+    <testcase classname="House Service updateHouse should throw an error if house is not found for update" name="House Service updateHouse should throw an error if house is not found for update" time="0.003">
+    </testcase>
+    <testcase classname="House Service updateHouse should throw an error if update fails" name="House Service updateHouse should throw an error if update fails" time="0.003">
+    </testcase>
+    <testcase classname="House Service deleteHouse should delete the house successfully" name="House Service deleteHouse should delete the house successfully" time="0.024">
+    </testcase>
+    <testcase classname="House Service deleteHouse should throw an error if house is not found for deletion" name="House Service deleteHouse should throw an error if house is not found for deletion" time="0.003">
+    </testcase>
+    <testcase classname="House Service deleteHouse should throw an error if deletion fails" name="House Service deleteHouse should throw an error if deletion fails" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="Auth Service" errors="0" failures="1" skipped="0" timestamp="2024-08-28T15:23:45" time="5.553" tests="9">
+    <testcase classname="Auth Service register should register a new user successfully" name="Auth Service register should register a new user successfully" time="0.031">
+    </testcase>
+    <testcase classname="Auth Service register should throw an error if user already exists" name="Auth Service register should throw an error if user already exists" time="0.045">
+    </testcase>
+    <testcase classname="Auth Service login should login successfully and return a token" name="Auth Service login should login successfully and return a token" time="0.004">
+      <failure>TypeError: user.save is not a function
+    at Object.save [as login] (C:\Users\Javie\Documents\Projects\gardenia\Backend\src\features\auth\service.js:59:14)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\auth\service.test.js:59:22)</failure>
+    </testcase>
+    <testcase classname="Auth Service login should throw an error if user is not found" name="Auth Service login should throw an error if user is not found" time="0.001">
+    </testcase>
+    <testcase classname="Auth Service login should throw an error if password is incorrect" name="Auth Service login should throw an error if password is incorrect" time="0.002">
+    </testcase>
+    <testcase classname="Auth Service getProfile should return the user profile successfully" name="Auth Service getProfile should return the user profile successfully" time="0.002">
+    </testcase>
+    <testcase classname="Auth Service getProfile should throw an error if user is not found" name="Auth Service getProfile should throw an error if user is not found" time="0.002">
+    </testcase>
+    <testcase classname="Auth Service updateProfile should update the user profile successfully" name="Auth Service updateProfile should update the user profile successfully" time="0.002">
+    </testcase>
+    <testcase classname="Auth Service updateProfile should throw an error if user is not found" name="Auth Service updateProfile should throw an error if user is not found" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="House Controller" errors="0" failures="2" skipped="0" timestamp="2024-08-28T15:23:51" time="2.234" tests="14">
+    <testcase classname="House Controller createHouse should create a new house successfully" name="House Controller createHouse should create a new house successfully" time="0.006">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 Expected: &quot;Beautiful House&quot;, &quot;New York&quot;, &quot;A beautiful house in New York&quot;
@@ -10,9 +77,9 @@ Number of calls: 0
     at Object.toHaveBeenCalledWith (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\auth\controller.test.js:32:40)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Controller createHouse should return 400 if name or location is missing" name="House Controller createHouse should return 400 if name or location is missing" time="0.003">
+    <testcase classname="House Controller createHouse should return 400 if name or location is missing" name="House Controller createHouse should return 400 if name or location is missing" time="0.001">
     </testcase>
-    <testcase classname="House Controller createHouse should handle internal server error" name="House Controller createHouse should handle internal server error" time="0.003">
+    <testcase classname="House Controller createHouse should handle internal server error" name="House Controller createHouse should handle internal server error" time="0.002">
       <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
 Expected: 500
@@ -28,148 +95,225 @@ Number of calls: 1
     </testcase>
     <testcase classname="House Controller getHouseById should get a house by ID successfully" name="House Controller getHouseById should get a house by ID successfully" time="0.002">
     </testcase>
-    <testcase classname="House Controller getHouseById should return 404 if house not found" name="House Controller getHouseById should return 404 if house not found" time="0.001">
+    <testcase classname="House Controller getHouseById should return 404 if house not found" name="House Controller getHouseById should return 404 if house not found" time="0.002">
     </testcase>
-    <testcase classname="House Controller getHouseById should handle internal server error" name="House Controller getHouseById should handle internal server error" time="0.002">
+    <testcase classname="House Controller getHouseById should handle internal server error" name="House Controller getHouseById should handle internal server error" time="0.001">
     </testcase>
     <testcase classname="House Controller updateHouse should update a house by ID successfully" name="House Controller updateHouse should update a house by ID successfully" time="0.002">
     </testcase>
-    <testcase classname="House Controller updateHouse should return 404 if house to update not found" name="House Controller updateHouse should return 404 if house to update not found" time="0.002">
+    <testcase classname="House Controller updateHouse should return 404 if house to update not found" name="House Controller updateHouse should return 404 if house to update not found" time="0.001">
     </testcase>
     <testcase classname="House Controller updateHouse should handle internal server error" name="House Controller updateHouse should handle internal server error" time="0.002">
     </testcase>
-    <testcase classname="House Controller deleteHouse should delete a house by ID successfully" name="House Controller deleteHouse should delete a house by ID successfully" time="0.003">
+    <testcase classname="House Controller deleteHouse should delete a house by ID successfully" name="House Controller deleteHouse should delete a house by ID successfully" time="0.005">
     </testcase>
-    <testcase classname="House Controller deleteHouse should return 404 if house to delete not found" name="House Controller deleteHouse should return 404 if house to delete not found" time="0.001">
+    <testcase classname="House Controller deleteHouse should return 404 if house to delete not found" name="House Controller deleteHouse should return 404 if house to delete not found" time="0.004">
     </testcase>
     <testcase classname="House Controller deleteHouse should handle internal server error" name="House Controller deleteHouse should handle internal server error" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="Auth Service" errors="0" failures="1" skipped="0" timestamp="2024-08-28T14:19:22" time="4.419" tests="9">
-    <testcase classname="Auth Service register should register a new user successfully" name="Auth Service register should register a new user successfully" time="0.029">
-    </testcase>
-    <testcase classname="Auth Service register should throw an error if user already exists" name="Auth Service register should throw an error if user already exists" time="0.038">
-    </testcase>
-    <testcase classname="Auth Service login should login successfully and return a token" name="Auth Service login should login successfully and return a token" time="0.002">
-      <failure>TypeError: user.save is not a function
-    at Object.save [as login] (C:\Users\Javie\Documents\Projects\gardenia\Backend\src\features\auth\service.js:59:14)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\auth\service.test.js:59:22)</failure>
-    </testcase>
-    <testcase classname="Auth Service login should throw an error if user is not found" name="Auth Service login should throw an error if user is not found" time="0.005">
-    </testcase>
-    <testcase classname="Auth Service login should throw an error if password is incorrect" name="Auth Service login should throw an error if password is incorrect" time="0.002">
-    </testcase>
-    <testcase classname="Auth Service getProfile should return the user profile successfully" name="Auth Service getProfile should return the user profile successfully" time="0.004">
-    </testcase>
-    <testcase classname="Auth Service getProfile should throw an error if user is not found" name="Auth Service getProfile should throw an error if user is not found" time="0.001">
-    </testcase>
-    <testcase classname="Auth Service updateProfile should update the user profile successfully" name="Auth Service updateProfile should update the user profile successfully" time="0.002">
-    </testcase>
-    <testcase classname="Auth Service updateProfile should throw an error if user is not found" name="Auth Service updateProfile should throw an error if user is not found" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="House Service" errors="0" failures="1" skipped="0" timestamp="2024-08-28T14:19:22" time="4.412" tests="13">
-    <testcase classname="House Service createHouse should create a new house and return it" name="House Service createHouse should create a new house and return it" time="0.116">
-      <failure>Error: expect(received).toEqual(expected) // deep equality
+  <testsuite name="Room Controller" errors="0" failures="12" skipped="0" timestamp="2024-08-28T15:23:45" time="9.515" tests="12">
+    <testcase classname="Room Controller POST /api/v1/rooms should create a room successfully" name="Room Controller POST /api/v1/rooms should create a room successfully" time="0.206">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
 
-- Expected  - 7
-+ Received  + 1
-
-- Object {
--   &quot;_id&quot;: &quot;66cf31ee935dd348ade7cdb0&quot;,
--   &quot;description&quot;: &quot;Test Description&quot;,
--   &quot;location&quot;: &quot;Test Location&quot;,
--   &quot;name&quot;: &quot;Test House&quot;,
--   &quot;save&quot;: [Function mockConstructor],
-- }
-+ Object {}
-    at Object.toEqual (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\house\service.test.js:36:22)
+Expected: 201
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:51:31)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service createHouse should throw an error if house creation fails" name="House Service createHouse should throw an error if house creation fails" time="0.016">
+    <testcase classname="Room Controller POST /api/v1/rooms should return 400 if required fields are missing" name="Room Controller POST /api/v1/rooms should return 400 if required fields are missing" time="0.141">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:65:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service getAllHouses should return all houses" name="House Service getAllHouses should return all houses" time="0.003">
+    <testcase classname="Room Controller GET /api/v1/rooms should return all rooms" name="Room Controller GET /api/v1/rooms should return all rooms" time="0.079">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:81:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service getAllHouses should throw an error if retrieval fails" name="House Service getAllHouses should throw an error if retrieval fails" time="0.003">
+    <testcase classname="Room Controller GET /api/v1/rooms should return 500 if an error occurs" name="Room Controller GET /api/v1/rooms should return 500 if an error occurs" time="0.024">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 500
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:90:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service getHouseById should return the house if found" name="House Service getHouseById should return the house if found" time="0.004">
+    <testcase classname="Room Controller GET /api/v1/rooms/:id should return a room by ID" name="Room Controller GET /api/v1/rooms/:id should return a room by ID" time="0.063">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:103:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service getHouseById should throw an error if house is not found" name="House Service getHouseById should throw an error if house is not found" time="0.003">
+    <testcase classname="Room Controller GET /api/v1/rooms/:id should return 404 if the room is not found" name="Room Controller GET /api/v1/rooms/:id should return 404 if the room is not found" time="0.106">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 404
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:112:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service getHouseById should throw an error if retrieval fails" name="House Service getHouseById should throw an error if retrieval fails" time="0.018">
+    <testcase classname="Room Controller PUT /api/v1/rooms/:id should update a room by ID" name="Room Controller PUT /api/v1/rooms/:id should update a room by ID" time="0.028">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:125:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service updateHouse should update the house and return the updated house" name="House Service updateHouse should update the house and return the updated house" time="0.007">
+    <testcase classname="Room Controller PUT /api/v1/rooms/:id should return 404 if the room is not found" name="Room Controller PUT /api/v1/rooms/:id should return 404 if the room is not found" time="0.02">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 404
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:135:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service updateHouse should throw an error if house is not found for update" name="House Service updateHouse should throw an error if house is not found for update" time="0.004">
+    <testcase classname="Room Controller PUT /api/v1/rooms/:id should return 400 if the request body is missing" name="Room Controller PUT /api/v1/rooms/:id should return 400 if the request body is missing" time="0.022">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:142:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service updateHouse should throw an error if update fails" name="House Service updateHouse should throw an error if update fails" time="0.004">
+    <testcase classname="Room Controller DELETE /api/v1/rooms/:id should delete a room by ID" name="Room Controller DELETE /api/v1/rooms/:id should delete a room by ID" time="0.025">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:153:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service deleteHouse should delete the house successfully" name="House Service deleteHouse should delete the house successfully" time="0.001">
+    <testcase classname="Room Controller DELETE /api/v1/rooms/:id should return 404 if the room is not found" name="Room Controller DELETE /api/v1/rooms/:id should return 404 if the room is not found" time="0.055">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 404
+Received: 401
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:162:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="House Service deleteHouse should throw an error if house is not found for deletion" name="House Service deleteHouse should throw an error if house is not found for deletion" time="0.002">
-    </testcase>
-    <testcase classname="House Service deleteHouse should throw an error if deletion fails" name="House Service deleteHouse should throw an error if deletion fails" time="0.003">
+    <testcase classname="Room Controller DELETE /api/v1/rooms/:id should return 400 if the room ID is not provided" name="Room Controller DELETE /api/v1/rooms/:id should return 400 if the room ID is not provided" time="0.015">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 404
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\unit\features\room\controller.test.js:169:31)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
   </testsuite>
-  <testsuite name="validateRegisterInput" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:27" time="0.761" tests="4">
+  <testsuite name="User Model" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:55" time="1.565" tests="4">
+    <testcase classname="User Model should create a user with required fields" name="User Model should create a user with required fields" time="0.091">
+    </testcase>
+    <testcase classname="User Model should not allow duplicate email addresses" name="User Model should not allow duplicate email addresses" time="0.059">
+    </testcase>
+    <testcase classname="User Model should handle optional fields correctly" name="User Model should handle optional fields correctly" time="0.013">
+    </testcase>
+    <testcase classname="User Model should add and retrieve houses correctly" name="User Model should add and retrieve houses correctly" time="0.059">
+    </testcase>
+  </testsuite>
+  <testsuite name="House Controller Integration" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:51" time="5.922" tests="7">
+    <testcase classname="House Controller Integration should create a new house" name="House Controller Integration should create a new house" time="0.124">
+    </testcase>
+    <testcase classname="House Controller Integration should get all houses" name="House Controller Integration should get all houses" time="0.07">
+    </testcase>
+    <testcase classname="House Controller Integration should get a house by ID" name="House Controller Integration should get a house by ID" time="0.085">
+    </testcase>
+    <testcase classname="House Controller Integration should update a house by ID" name="House Controller Integration should update a house by ID" time="0.073">
+    </testcase>
+    <testcase classname="House Controller Integration should delete a house by ID" name="House Controller Integration should delete a house by ID" time="0.1">
+    </testcase>
+    <testcase classname="House Controller Integration should return 404 when getting a non-existent house by ID" name="House Controller Integration should return 404 when getting a non-existent house by ID" time="0.047">
+    </testcase>
+    <testcase classname="House Controller Integration should return 404 when deleting a non-existent house by ID" name="House Controller Integration should return 404 when deleting a non-existent house by ID" time="0.081">
+    </testcase>
+  </testsuite>
+  <testsuite name="verifyToken Middleware" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:57" time="1.333" tests="4">
+    <testcase classname="verifyToken Middleware should return 401 if no authorization header is provided" name="verifyToken Middleware should return 401 if no authorization header is provided" time="0.006">
+    </testcase>
+    <testcase classname="verifyToken Middleware should return 401 if no token is provided" name="verifyToken Middleware should return 401 if no token is provided" time="0.002">
+    </testcase>
+    <testcase classname="verifyToken Middleware should return 403 if token verification fails" name="verifyToken Middleware should return 403 if token verification fails" time="0.003">
+    </testcase>
+    <testcase classname="verifyToken Middleware should call next and set req.user if token is valid" name="verifyToken Middleware should call next and set req.user if token is valid" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="Auth Integration Tests" errors="0" failures="1" skipped="0" timestamp="2024-08-28T15:23:53" time="5.136" tests="1">
+    <testcase classname="Auth Integration Tests should register a new user, login, and get the profile" name="Auth Integration Tests should register a new user, login, and get the profile" time="1.056">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 400
+    at Object.toBe (C:\Users\Javie\Documents\Projects\gardenia\Backend\test\integration\features\auth\auth.test.js:23:34)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="validateRegisterInput" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:57" time="1.329" tests="4">
     <testcase classname="validateRegisterInput should return valid if both username and password are provided" name="validateRegisterInput should return valid if both username and password are provided" time="0.003">
     </testcase>
     <testcase classname="validateRegisterInput should return invalid if username is missing" name="validateRegisterInput should return invalid if username is missing" time="0.002">
     </testcase>
     <testcase classname="validateRegisterInput should return invalid if password is missing" name="validateRegisterInput should return invalid if password is missing" time="0.002">
     </testcase>
-    <testcase classname="validateRegisterInput should return invalid if both username and password are missing" name="validateRegisterInput should return invalid if both username and password are missing" time="0.001">
+    <testcase classname="validateRegisterInput should return invalid if both username and password are missing" name="validateRegisterInput should return invalid if both username and password are missing" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="User Model" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:27" time="1.272" tests="4">
-    <testcase classname="User Model should create a user with required fields" name="User Model should create a user with required fields" time="0.075">
+  <testsuite name="House Model" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:58" time="0.948" tests="4">
+    <testcase classname="House Model should create a house with required fields" name="House Model should create a house with required fields" time="0.077">
     </testcase>
-    <testcase classname="User Model should not allow duplicate email addresses" name="User Model should not allow duplicate email addresses" time="0.05">
+    <testcase classname="House Model should update the updatedAt field before saving" name="House Model should update the updatedAt field before saving" time="0.018">
     </testcase>
-    <testcase classname="User Model should handle optional fields correctly" name="User Model should handle optional fields correctly" time="0.01">
+    <testcase classname="House Model should have a default createdAt and updatedAt date" name="House Model should have a default createdAt and updatedAt date" time="0.006">
     </testcase>
-    <testcase classname="User Model should add and retrieve houses correctly" name="User Model should add and retrieve houses correctly" time="0.062">
-    </testcase>
-  </testsuite>
-  <testsuite name="verifyToken Middleware" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:28" time="1.284" tests="4">
-    <testcase classname="verifyToken Middleware should return 401 if no authorization header is provided" name="verifyToken Middleware should return 401 if no authorization header is provided" time="0.006">
-    </testcase>
-    <testcase classname="verifyToken Middleware should return 401 if no token is provided" name="verifyToken Middleware should return 401 if no token is provided" time="0.002">
-    </testcase>
-    <testcase classname="verifyToken Middleware should return 403 if token verification fails" name="verifyToken Middleware should return 403 if token verification fails" time="0.002">
-    </testcase>
-    <testcase classname="verifyToken Middleware should call next and set req.user if token is valid" name="verifyToken Middleware should call next and set req.user if token is valid" time="0.003">
+    <testcase classname="House Model should validate required fields" name="House Model should validate required fields" time="0.005">
     </testcase>
   </testsuite>
-  <testsuite name="House Model" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:28" time="0.858" tests="4">
-    <testcase classname="House Model should create a house with required fields" name="House Model should create a house with required fields" time="0.083">
+  <testsuite name="Room Model" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:59" time="1.015" tests="5">
+    <testcase classname="Room Model should create a room with required fields" name="Room Model should create a room with required fields" time="0.052">
     </testcase>
-    <testcase classname="House Model should update the updatedAt field before saving" name="House Model should update the updatedAt field before saving" time="0.016">
+    <testcase classname="Room Model should update the updatedAt field before saving" name="Room Model should update the updatedAt field before saving" time="0.016">
     </testcase>
-    <testcase classname="House Model should have a default createdAt and updatedAt date" name="House Model should have a default createdAt and updatedAt date" time="0.007">
+    <testcase classname="Room Model should have a default createdAt and updatedAt date" name="Room Model should have a default createdAt and updatedAt date" time="0.007">
     </testcase>
-    <testcase classname="House Model should validate required fields" name="House Model should validate required fields" time="0.003">
+    <testcase classname="Room Model should validate required fields" name="Room Model should validate required fields" time="0.004">
     </testcase>
-  </testsuite>
-  <testsuite name="Auth Integration Tests" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:27" time="3.874" tests="1">
-    <testcase classname="Auth Integration Tests should register a new user, login, and get the profile" name="Auth Integration Tests should register a new user, login, and get the profile" time="0.7">
+    <testcase classname="Room Model should validate enum fields" name="Room Model should validate enum fields" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="House Controller Integration" errors="0" failures="0" skipped="0" timestamp="2024-08-28T14:19:29" time="3.305" tests="7">
-    <testcase classname="House Controller Integration should create a new house" name="House Controller Integration should create a new house" time="0.056">
+  <testsuite name="Room Service" errors="0" failures="0" skipped="0" timestamp="2024-08-28T15:23:59" time="2.393" tests="13">
+    <testcase classname="Room Service createRoom should create a room and associate it with a house" name="Room Service createRoom should create a room and associate it with a house" time="0.005">
     </testcase>
-    <testcase classname="House Controller Integration should get all houses" name="House Controller Integration should get all houses" time="0.025">
+    <testcase classname="Room Service createRoom should throw an error if there is an issue creating a room" name="Room Service createRoom should throw an error if there is an issue creating a room" time="0.02">
     </testcase>
-    <testcase classname="House Controller Integration should get a house by ID" name="House Controller Integration should get a house by ID" time="0.031">
+    <testcase classname="Room Service getAllRooms should return all rooms" name="Room Service getAllRooms should return all rooms" time="0.002">
     </testcase>
-    <testcase classname="House Controller Integration should update a house by ID" name="House Controller Integration should update a house by ID" time="0.022">
+    <testcase classname="Room Service getAllRooms should throw an error if there is an issue retrieving rooms" name="Room Service getAllRooms should throw an error if there is an issue retrieving rooms" time="0.001">
     </testcase>
-    <testcase classname="House Controller Integration should delete a house by ID" name="House Controller Integration should delete a house by ID" time="0.025">
+    <testcase classname="Room Service getRoomById should return a room by ID" name="Room Service getRoomById should return a room by ID" time="0.002">
     </testcase>
-    <testcase classname="House Controller Integration should return 404 when getting a non-existent house by ID" name="House Controller Integration should return 404 when getting a non-existent house by ID" time="0.025">
+    <testcase classname="Room Service getRoomById should throw an error if the room is not found" name="Room Service getRoomById should throw an error if the room is not found" time="0.001">
     </testcase>
-    <testcase classname="House Controller Integration should return 404 when deleting a non-existent house by ID" name="House Controller Integration should return 404 when deleting a non-existent house by ID" time="0.035">
+    <testcase classname="Room Service getRoomById should throw an error if there is an issue retrieving the room" name="Room Service getRoomById should throw an error if there is an issue retrieving the room" time="0.005">
+    </testcase>
+    <testcase classname="Room Service updateRoom should update a room by ID" name="Room Service updateRoom should update a room by ID" time="0.002">
+    </testcase>
+    <testcase classname="Room Service updateRoom should throw an error if the room is not found" name="Room Service updateRoom should throw an error if the room is not found" time="0.001">
+    </testcase>
+    <testcase classname="Room Service updateRoom should throw an error if there is an issue updating the room" name="Room Service updateRoom should throw an error if there is an issue updating the room" time="0.001">
+    </testcase>
+    <testcase classname="Room Service deleteRoom should delete a room by ID" name="Room Service deleteRoom should delete a room by ID" time="0.001">
+    </testcase>
+    <testcase classname="Room Service deleteRoom should throw an error if the room is not found" name="Room Service deleteRoom should throw an error if the room is not found" time="0.001">
+    </testcase>
+    <testcase classname="Room Service deleteRoom should throw an error if there is an issue deleting the room" name="Room Service deleteRoom should throw an error if there is an issue deleting the room" time="0.001">
     </testcase>
   </testsuite>
 </testsuites>

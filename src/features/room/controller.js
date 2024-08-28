@@ -1,109 +1,111 @@
-const houseService = require('./service');
+const roomService = require('./service');
 const logger = require('../../config/logger');
 
 /**
- * Crea una nueva casa.
+ * Crea una nueva habitación.
  *
  * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} req.body - El cuerpo de la solicitud, que debe contener los detalles de la casa.
- * @param {string} req.body.name - El nombre de la casa.
- * @param {string} req.body.location - La ubicación de la casa.
- * @param {string} [req.body.description] - La descripción de la casa (opcional).
+ * @param {Object} req.body - El cuerpo de la solicitud, que debe contener los detalles de la habitación.
+ * @param {string} req.body.name - El nombre de la habitación.
+ * @param {string} req.body.type - El tipo de habitación (e.g., dormitorio, sala de estar).
+ * @param {string} req.body.humidity - El nivel de humedad en la habitación ('low', 'medium', 'high').
+ * @param {boolean} req.body.airConditioner - Indica si hay aire acondicionado en la habitación.
+ * @param {boolean} req.body.radiator - Indica si hay radiador en la habitación.
+ * @param {string} req.body.light - El nivel de luz en la habitación ('low', 'medium', 'high').
+ * @param {string} req.body.houseId - El ID de la casa a la que pertenece la habitación.
+ * @param {Array<string>} req.body.plants - Array de IDs de plantas en la habitación.
  * @param {Object} res - El objeto de respuesta Express.
  * @returns {void}
  */
-exports.createHouse = async (req, res) => {
-  logger.info('controller.js | Entrando en la función createHouse()');
+exports.createRoom = async (req, res) => {
+  logger.info('controller.js | Entrando en la función createRoom()');
 
   if (!req.body) {
     logger.warn('controller.js | El cuerpo de la solicitud está vacío');
     return res.status(400).json({ message: 'Request body is missing' });
   }
 
-  const { name, location, description } = req.body;
-  const userId = req.userId; // Suponiendo que el ID del usuario está disponible en req.userId
+  const { name, type, humidity, airConditioner, radiator, light, houseId, plants } = req.body;
 
-  if (!name || !location) {
+  if (!name || !type || !houseId) {
     logger.warn('controller.js | Campos requeridos están vacíos');
-    return res.status(400).json({ message: 'Name and location are required' });
+    return res.status(400).json({ message: 'Name, type, and house ID are required' });
   }
 
-  logger.debug(`controller.js | Nombre de la casa: ${name}`);
-  logger.debug(`controller.js | Ubicación de la casa: ${location}`);
-  logger.debug(`controller.js | Descripción de la casa: ${description || 'No proporcionada'}`);
-  logger.debug(`controller.js | ID del usuario: ${userId}`);
+  logger.debug(`controller.js | Nombre de la habitación: ${name}`);
+  logger.debug(`controller.js | Tipo de habitación: ${type}`);
+  logger.debug(`controller.js | Humedad: ${humidity}`);
+  logger.debug(`controller.js | Aire acondicionado: ${airConditioner}`);
+  logger.debug(`controller.js | Radiador: ${radiator}`);
+  logger.debug(`controller.js | Luz: ${light}`);
+  logger.debug(`controller.js | ID de la casa: ${houseId}`);
+  logger.debug(`controller.js | Plantas: ${plants || 'No proporcionadas'}`);
 
   try {
-    // Asegúrate de que el userId esté disponible y sea válido antes de llamar al servicio
-    if (!userId) {
-      logger.warn('controller.js | ID del usuario no proporcionado');
-      return res.status(400).json({ message: 'User ID is required' });
-    }
+    // Llamada al servicio para crear la habitación
+    const room = await roomService.createRoom(name, type, humidity, airConditioner, radiator, light, houseId, plants);
 
-    // Llamada al servicio para crear la casa
-    const house = await houseService.createHouse(name, location, description, userId);
-
-    logger.info(`controller.js | Casa con nombre ${name} creada con éxito`);
-    res.status(201).json({ id: house._id, message: 'House created successfully' });
+    logger.info(`controller.js | Habitación con nombre ${name} creada con éxito`);
+    res.status(201).json({ id: room._id, message: 'Room created successfully' });
   } catch (error) {
-    logger.error(`controller.js | Error al crear casa con nombre ${name}`);
+    logger.error(`controller.js | Error al crear habitación con nombre ${name}`);
     logger.debug(`controller.js | Error: ${error.message}`);
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
 /**
- * Obtiene todas las casas.
+ * Obtiene todas las habitaciones.
  *
  * @param {Object} req - El objeto de solicitud Express.
  * @param {Object} res - El objeto de respuesta Express.
  * @returns {void}
  */
-exports.getAllHouses = async (req, res) => {
-  logger.info('controller.js | Entrando en la función getAllHouses()');
+exports.getAllRooms = async (req, res) => {
+  logger.info('controller.js | Entrando en la función getAllRooms()');
 
   try {
-    const houses = await houseService.getAllHouses();
-    logger.info('controller.js | Recuperadas todas las casas con éxito');
-    res.status(200).json(houses);
+    const rooms = await roomService.getAllRooms();
+    logger.info('controller.js | Recuperadas todas las habitaciones con éxito');
+    res.status(200).json(rooms);
   } catch (error) {
-    logger.error('controller.js | Error al recuperar las casas');
+    logger.error('controller.js | Error al recuperar las habitaciones');
     logger.debug(`controller.js | Error: ${error.message}`);
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
 /**
- * Obtiene una casa por su ID.
+ * Obtiene una habitación por su ID.
  *
  * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la casa.
- * @param {string} req.params.id - El ID de la casa a recuperar.
+ * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la habitación.
+ * @param {string} req.params.id - El ID de la habitación a recuperar.
  * @param {Object} res - El objeto de respuesta Express.
  * @returns {void}
  */
-exports.getHouseById = async (req, res) => {
-  logger.info('controller.js | Entrando en la función getHouseById()');
+exports.getRoomById = async (req, res) => {
+  logger.info('controller.js | Entrando en la función getRoomById()');
 
-  const houseId = req.params.id;
+  const roomId = req.params.id;
 
-  if (!houseId) {
-    logger.warn('controller.js | ID de la casa no proporcionado');
-    return res.status(400).json({ message: 'House ID is required' });
+  if (!roomId) {
+    logger.warn('controller.js | ID de la habitación no proporcionado');
+    return res.status(400).json({ message: 'Room ID is required' });
   }
 
-  logger.debug(`controller.js | ID de la casa a recuperar: ${houseId}`);
+  logger.debug(`controller.js | ID de la habitación a recuperar: ${roomId}`);
 
   try {
-    const house = await houseService.getHouseById(houseId);
-    logger.info(`controller.js | Casa con ID ${houseId} recuperada con éxito`);
-    res.status(200).json(house);
+    const room = await roomService.getRoomById(roomId);
+    logger.info(`controller.js | Habitación con ID ${roomId} recuperada con éxito`);
+    res.status(200).json(room);
   } catch (error) {
-    if (error.message === 'House not found') {
-      logger.warn(`controller.js | Casa con ID ${houseId} no encontrada`);
-      res.status(404).json({ message: 'House not found' });
+    if (error.message === 'Room not found') {
+      logger.warn(`controller.js | Habitación con ID ${roomId} no encontrada`);
+      res.status(404).json({ message: 'Room not found' });
     } else {
-      logger.error(`controller.js | Error al recuperar casa con ID ${houseId}`);
+      logger.error(`controller.js | Error al recuperar habitación con ID ${roomId}`);
       logger.debug(`controller.js | Error: ${error.message}`);
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
@@ -111,23 +113,23 @@ exports.getHouseById = async (req, res) => {
 };
 
 /**
- * Actualiza una casa por su ID.
+ * Actualiza una habitación por su ID.
  *
  * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la casa.
- * @param {string} req.params.id - El ID de la casa a actualizar.
+ * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la habitación.
+ * @param {string} req.params.id - El ID de la habitación a actualizar.
  * @param {Object} req.body - El cuerpo de la solicitud, que debe contener los campos a actualizar.
  * @param {Object} res - El objeto de respuesta Express.
  * @returns {void}
  */
-exports.updateHouse = async (req, res) => {
-  logger.info('controller.js | Entrando en la función updateHouse()');
+exports.updateRoom = async (req, res) => {
+  logger.info('controller.js | Entrando en la función updateRoom()');
 
-  const houseId = req.params.id;
+  const roomId = req.params.id;
 
-  if (!houseId) {
-    logger.warn('controller.js | ID de la casa no proporcionado');
-    return res.status(400).json({ message: 'House ID is required' });
+  if (!roomId) {
+    logger.warn('controller.js | ID de la habitación no proporcionado');
+    return res.status(400).json({ message: 'Room ID is required' });
   }
 
   if (!req.body) {
@@ -135,19 +137,19 @@ exports.updateHouse = async (req, res) => {
     return res.status(400).json({ message: 'Request body is missing' });
   }
 
-  logger.debug(`controller.js | ID de la casa a actualizar: ${houseId}`);
+  logger.debug(`controller.js | ID de la habitación a actualizar: ${roomId}`);
   logger.debug(`controller.js | Datos de actualización: ${JSON.stringify(req.body)}`);
 
   try {
-    const updatedHouse = await houseService.updateHouse(houseId, req.body);
-    logger.info(`controller.js | Casa con ID ${houseId} actualizada con éxito`);
-    res.status(200).json({ message: 'House updated successfully', house: updatedHouse });
+    const updatedRoom = await roomService.updateRoom(roomId, req.body);
+    logger.info(`controller.js | Habitación con ID ${roomId} actualizada con éxito`);
+    res.status(200).json({ message: 'Room updated successfully', room: updatedRoom });
   } catch (error) {
-    if (error.message === 'House not found') {
-      logger.warn(`controller.js | Casa con ID ${houseId} no encontrada para actualizar`);
-      res.status(404).json({ message: 'House not found' });
+    if (error.message === 'Room not found') {
+      logger.warn(`controller.js | Habitación con ID ${roomId} no encontrada para actualizar`);
+      res.status(404).json({ message: 'Room not found' });
     } else {
-      logger.error(`controller.js | Error al actualizar casa con ID ${houseId}`);
+      logger.error(`controller.js | Error al actualizar habitación con ID ${roomId}`);
       logger.debug(`controller.js | Error: ${error.message}`);
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
@@ -155,36 +157,36 @@ exports.updateHouse = async (req, res) => {
 };
 
 /**
- * Elimina una casa por su ID.
+ * Elimina una habitación por su ID.
  *
  * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la casa.
- * @param {string} req.params.id - El ID de la casa a eliminar.
+ * @param {Object} req.params - Los parámetros de la solicitud, que deben incluir el ID de la habitación.
+ * @param {string} req.params.id - El ID de la habitación a eliminar.
  * @param {Object} res - El objeto de respuesta Express.
  * @returns {void}
  */
-exports.deleteHouse = async (req, res) => {
-  logger.info('controller.js | Entrando en la función deleteHouse()');
+exports.deleteRoom = async (req, res) => {
+  logger.info('controller.js | Entrando en la función deleteRoom()');
 
-  const houseId = req.params.id;
+  const roomId = req.params.id;
 
-  if (!houseId) {
-    logger.warn('controller.js | ID de la casa no proporcionado');
-    return res.status(400).json({ message: 'House ID is required' });
+  if (!roomId) {
+    logger.warn('controller.js | ID de la habitación no proporcionado');
+    return res.status(400).json({ message: 'Room ID is required' });
   }
 
-  logger.debug(`controller.js | ID de la casa a eliminar: ${houseId}`);
+  logger.debug(`controller.js | ID de la habitación a eliminar: ${roomId}`);
 
   try {
-    await houseService.deleteHouse(houseId);
-    logger.info(`controller.js | Casa con ID ${houseId} eliminada con éxito`);
-    res.status(200).json({ message: 'House deleted successfully' });
+    await roomService.deleteRoom(roomId);
+    logger.info(`controller.js | Habitación con ID ${roomId} eliminada con éxito`);
+    res.status(200).json({ message: 'Room deleted successfully' });
   } catch (error) {
-    if (error.message === 'House not found') {
-      logger.warn(`controller.js | Casa con ID ${houseId} no encontrada para eliminar`);
-      res.status(404).json({ message: 'House not found' });
+    if (error.message === 'Room not found') {
+      logger.warn(`controller.js | Habitación con ID ${roomId} no encontrada para eliminar`);
+      res.status(404).json({ message: 'Room not found' });
     } else {
-      logger.error(`controller.js | Error al eliminar casa con ID ${houseId}`);
+      logger.error(`controller.js | Error al eliminar habitación con ID ${roomId}`);
       logger.debug(`controller.js | Error: ${error.message}`);
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }

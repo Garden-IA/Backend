@@ -1,9 +1,12 @@
 // test/globalSetup.js
 const mongoose = require('mongoose');
 const logger = require('../src/config/logger');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
 module.exports = async () => {
-  const dbUri = 'mongodb://localhost:27017/testdb'; // Cambia esto a la URI de tu base de datos de pruebas
+  const mongoServer = await MongoMemoryServer.create();
+  const dbUri = mongoServer.getUri();
+  // const dbUri = 'mongodb://localhost:27017/testdb'; // Cambia esto a la URI de tu base de datos de pruebas
 
   logger.info('Conectando a la base de datos de pruebas...');
 

@@ -1,22 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const houseController = require('./controller');
+const roomController = require('./controller');
 const authMiddleware = require('../../middleware/auth');
 
 /**
  * @swagger
  * tags:
- *   name: Houses
- *   description: House management endpoints
+ *   name: Rooms
+ *   description: Room management endpoints
  */
 
 /**
  * @swagger
- * /api/v1/houses:
+ * /api/v1/rooms:
  *   post:
- *     tags: [Houses]
- *     summary: Create a new house
- *     description: Creates a new house entry in the system.
+ *     tags: [Rooms]
+ *     summary: Create a new room
+ *     description: Creates a new room entry in the system. Requires the ID of the house to which the room belongs.
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -28,22 +28,49 @@ const authMiddleware = require('../../middleware/auth');
  *             properties:
  *               name:
  *                 type: string
- *                 description: The name of the house
- *                 example: My House
- *               location:
+ *                 description: The name of the room
+ *                 example: Living Room
+ *               type:
  *                 type: string
- *                 description: The location of the house
- *                 example: 123 Main St
- *               description:
+ *                 description: The type of room (e.g., bedroom, living room)
+ *                 example: Living Room
+ *               humidity:
  *                 type: string
- *                 description: Optional description of the house
- *                 example: A cozy house with a beautiful garden
+ *                 description: The humidity level in the room
+ *                 enum: [low, medium, high]
+ *                 example: medium
+ *               airConditioner:
+ *                 type: boolean
+ *                 description: Indicates if there is an air conditioner in the room
+ *                 example: true
+ *               radiator:
+ *                 type: boolean
+ *                 description: Indicates if there is a radiator in the room
+ *                 example: false
+ *               light:
+ *                 type: string
+ *                 description: The light level in the room
+ *                 enum: [low, medium, high]
+ *                 example: high
+ *               houseId:
+ *                 type: string
+ *                 description: The ID of the house to which the room belongs
+ *                 example: 60b8d6f7c9d3466a7a5f2b4a
+ *               plants:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   description: Array of plant IDs in the room
+ *                   example: [60b8d6f7c9d3466a7a5f2b4b, 60b8d6f7c9d3466a7a5f2b4c]
  *           required:
  *             - name
- *             - location
+ *             - type
+ *             - humidity
+ *             - light
+ *             - houseId
  *     responses:
  *       201:
- *         description: House created successfully
+ *         description: Room created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -51,11 +78,11 @@ const authMiddleware = require('../../middleware/auth');
  *               properties:
  *                 id:
  *                   type: string
- *                   description: The ID of the created house
- *                   example: 60b8d6f7c9d3466a7a5f2b4a
+ *                   description: The ID of the created room
+ *                   example: 60b8d6f7c9d3466a7a5f2b4d
  *                 message:
  *                   type: string
- *                   example: House created successfully
+ *                   example: Room created successfully
  *       400:
  *         description: Bad request, possibly due to invalid input
  *       401:
@@ -63,20 +90,20 @@ const authMiddleware = require('../../middleware/auth');
  *       500:
  *         description: Internal server error
  */
-router.post('/houses', authMiddleware.verifyToken, houseController.createHouse);
+router.post('/rooms', authMiddleware.verifyToken, roomController.createRoom);
 
 /**
  * @swagger
- * /api/v1/houses:
+ * /api/v1/rooms:
  *   get:
- *     tags: [Houses]
- *     summary: Get all houses
- *     description: Retrieves a list of all houses.
+ *     tags: [Rooms]
+ *     summary: Get all rooms
+ *     description: Retrieves a list of all rooms.
  *     security:
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: List of houses retrieved successfully
+ *         description: List of rooms retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -86,34 +113,52 @@ router.post('/houses', authMiddleware.verifyToken, houseController.createHouse);
  *                 properties:
  *                   id:
  *                     type: string
- *                     description: The ID of the house
- *                     example: 60b8d6f7c9d3466a7a5f2b4a
+ *                     description: The ID of the room
+ *                     example: 60b8d6f7c9d3466a7a5f2b4d
  *                   name:
  *                     type: string
- *                     description: The name of the house
- *                     example: My House
- *                   location:
+ *                     description: The name of the room
+ *                     example: Living Room
+ *                   type:
  *                     type: string
- *                     description: The location of the house
- *                     example: 123 Main St
- *                   description:
+ *                     description: The type of room
+ *                     example: Living Room
+ *                   humidity:
  *                     type: string
- *                     description: Optional description of the house
- *                     example: A cozy house with a beautiful garden
+ *                     description: The humidity level in the room
+ *                     example: medium
+ *                   airConditioner:
+ *                     type: boolean
+ *                     description: Indicates if there is an air conditioner in the room
+ *                     example: true
+ *                   radiator:
+ *                     type: boolean
+ *                     description: Indicates if there is a radiator in the room
+ *                     example: false
+ *                   light:
+ *                     type: string
+ *                     description: The light level in the room
+ *                     example: high
+ *                   plants:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       description: Array of plant IDs in the room
+ *                     example: [60b8d6f7c9d3466a7a5f2b4b, 60b8d6f7c9d3466a7a5f2b4c]
  *       401:
  *         description: Unauthorized, token is missing or invalid
  *       500:
  *         description: Internal server error
  */
-router.get('/houses', authMiddleware.verifyToken, houseController.getAllHouses);
+router.get('/rooms', authMiddleware.verifyToken, roomController.getAllRooms);
 
 /**
  * @swagger
- * /api/v1/houses/{id}:
+ * /api/v1/rooms/{id}:
  *   get:
- *     tags: [Houses]
- *     summary: Get house by ID
- *     description: Retrieves a specific house by its ID.
+ *     tags: [Rooms]
+ *     summary: Get room by ID
+ *     description: Retrieves a specific room by its ID.
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -122,10 +167,10 @@ router.get('/houses', authMiddleware.verifyToken, houseController.getAllHouses);
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the house to retrieve
+ *         description: The ID of the room to retrieve
  *     responses:
  *       200:
- *         description: House retrieved successfully
+ *         description: Room retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -133,36 +178,54 @@ router.get('/houses', authMiddleware.verifyToken, houseController.getAllHouses);
  *               properties:
  *                 id:
  *                   type: string
- *                   description: The ID of the house
- *                   example: 60b8d6f7c9d3466a7a5f2b4a
+ *                   description: The ID of the room
+ *                   example: 60b8d6f7c9d3466a7a5f2b4d
  *                 name:
  *                   type: string
- *                   description: The name of the house
- *                   example: My House
- *                 location:
+ *                   description: The name of the room
+ *                   example: Living Room
+ *                 type:
  *                   type: string
- *                   description: The location of the house
- *                   example: 123 Main St
- *                 description:
+ *                   description: The type of room
+ *                   example: Living Room
+ *                 humidity:
  *                   type: string
- *                   description: Optional description of the house
- *                   example: A cozy house with a beautiful garden
+ *                   description: The humidity level in the room
+ *                   example: medium
+ *                 airConditioner:
+ *                   type: boolean
+ *                   description: Indicates if there is an air conditioner in the room
+ *                   example: true
+ *                 radiator:
+ *                   type: boolean
+ *                   description: Indicates if there is a radiator in the room
+ *                   example: false
+ *                 light:
+ *                   type: string
+ *                   description: The light level in the room
+ *                   example: high
+ *                 plants:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     description: Array of plant IDs in the room
+ *                   example: [60b8d6f7c9d3466a7a5f2b4b, 60b8d6f7c9d3466a7a5f2b4c]
  *       401:
  *         description: Unauthorized, token is missing or invalid
  *       404:
- *         description: House not found
+ *         description: Room not found
  *       500:
  *         description: Internal server error
  */
-router.get('/houses/:id', authMiddleware.verifyToken, houseController.getHouseById);
+router.get('/rooms/:id', authMiddleware.verifyToken, roomController.getRoomById);
 
 /**
  * @swagger
- * /api/v1/houses/{id}:
+ * /api/v1/rooms/{id}:
  *   put:
- *     tags: [Houses]
- *     summary: Update house by ID
- *     description: Updates the details of an existing house by its ID.
+ *     tags: [Rooms]
+ *     summary: Update room by ID
+ *     description: Updates the details of an existing room by its ID.
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -171,7 +234,7 @@ router.get('/houses/:id', authMiddleware.verifyToken, houseController.getHouseBy
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the house to update
+ *         description: The ID of the room to update
  *     requestBody:
  *       required: true
  *       content:
@@ -181,22 +244,44 @@ router.get('/houses/:id', authMiddleware.verifyToken, houseController.getHouseBy
  *             properties:
  *               name:
  *                 type: string
- *                 description: The name of the house
- *                 example: My House
- *               location:
+ *                 description: The name of the room
+ *                 example: Living Room
+ *               type:
  *                 type: string
- *                 description: The location of the house
- *                 example: 123 Main St
- *               description:
+ *                 description: The type of room (e.g., bedroom, living room)
+ *                 example: Living Room
+ *               humidity:
  *                 type: string
- *                 description: Optional description of the house
- *                 example: A cozy house with a beautiful garden
+ *                 description: The humidity level in the room
+ *                 enum: [low, medium, high]
+ *                 example: medium
+ *               airConditioner:
+ *                 type: boolean
+ *                 description: Indicates if there is an air conditioner in the room
+ *                 example: true
+ *               radiator:
+ *                 type: boolean
+ *                 description: Indicates if there is a radiator in the room
+ *                 example: false
+ *               light:
+ *                 type: string
+ *                 description: The light level in the room
+ *                 enum: [low, medium, high]
+ *                 example: high
+ *               plants:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   description: Array of plant IDs in the room
+ *                   example: [60b8d6f7c9d3466a7a5f2b4b, 60b8d6f7c9d3466a7a5f2b4c]
  *           required:
  *             - name
- *             - location
+ *             - type
+ *             - humidity
+ *             - light
  *     responses:
  *       200:
- *         description: House updated successfully
+ *         description: Room updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -204,25 +289,25 @@ router.get('/houses/:id', authMiddleware.verifyToken, houseController.getHouseBy
  *               properties:
  *                 message:
  *                   type: string
- *                   example: House updated successfully
+ *                   example: Room updated successfully
  *       400:
  *         description: Bad request, possibly due to invalid input
  *       401:
  *         description: Unauthorized, token is missing or invalid
  *       404:
- *         description: House not found
+ *         description: Room not found
  *       500:
  *         description: Internal server error
  */
-router.put('/houses/:id', authMiddleware.verifyToken, houseController.updateHouse);
+router.put('/rooms/:id', authMiddleware.verifyToken, roomController.updateRoom);
 
 /**
  * @swagger
- * /api/v1/houses/{id}:
+ * /api/v1/rooms/{id}:
  *   delete:
- *     tags: [Houses]
- *     summary: Delete house by ID
- *     description: Deletes a specific house by its ID.
+ *     tags: [Rooms]
+ *     summary: Delete room by ID
+ *     description: Deletes a specific room by its ID.
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -231,10 +316,10 @@ router.put('/houses/:id', authMiddleware.verifyToken, houseController.updateHous
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the house to delete
+ *         description: The ID of the room to delete
  *     responses:
  *       200:
- *         description: House deleted successfully
+ *         description: Room deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -242,14 +327,14 @@ router.put('/houses/:id', authMiddleware.verifyToken, houseController.updateHous
  *               properties:
  *                 message:
  *                   type: string
- *                   example: House deleted successfully
+ *                   example: Room deleted successfully
  *       401:
  *         description: Unauthorized, token is missing or invalid
  *       404:
- *         description: House not found
+ *         description: Room not found
  *       500:
  *         description: Internal server error
  */
-router.delete('/houses/:id', authMiddleware.verifyToken, houseController.deleteHouse);
+router.delete('/rooms/:id', authMiddleware.verifyToken, roomController.deleteRoom);
 
 module.exports = router;

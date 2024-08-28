@@ -12,6 +12,7 @@ module.exports = async () => {
 
   try {
     await mongoose.disconnect();
+    await mongoServer.stop();
     logger.info('Desconexión de la base de datos de pruebas realizada con éxito');
   } catch (error) {
     logger.error(`Error al desconectar de la base de datos de pruebas: ${error.message}`);

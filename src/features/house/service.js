@@ -132,6 +132,9 @@ exports.deleteHouse = async id => {
       throw new Error('House not found');
     }
 
+    // También deberíamos eliminar la casa de la lista de casas del usuario
+    await User.updateMany({ houses: id }, { $pull: { houses: id } });
+
     logger.info(`service.js | Casa con ID ${id} eliminada con éxito`);
   } catch (error) {
     logger.error(`service.js | Error al eliminar casa con ID ${id}`);

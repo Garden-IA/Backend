@@ -16,9 +16,13 @@ swaggerMiddleware(app);
 const authRoutes = require('./src/features/auth/routes');
 const plantRoutes = require('./src/features/plant/routes');
 const houseRoutes = require('./src/features/house/routes');
+const roomRoutes = require('./src/features/room/routes');
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1', plantRoutes);
-app.use('/api/v1', houseRoutes);
+const apiRootPath = '/api/v1';
+
+app.use(`${apiRootPath}/auth`, authRoutes);
+app.use(`${apiRootPath}`, plantRoutes);
+app.use(`${apiRootPath}`, houseRoutes);
+app.use(`${apiRootPath}`, roomRoutes);
 
 module.exports = app;

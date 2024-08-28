@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const roomController = require('./controller');
 const authMiddleware = require('../../middleware/auth');
+const { logRequest } = require('../../middleware/loggerMiddleware');
+
+router.use(logRequest);
 
 /**
  * @swagger

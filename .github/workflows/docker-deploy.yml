@@ -64,8 +64,8 @@ jobs:
 
       - name: Build and Push Docker Image to GitHub Container Registry (Standard Node.js)
         run: |
-          docker tag jsisques/gardenia-backend:${{ env.TAG }} ghcr.io/jsisques/gardenia-backend:${{ env.TAG }}
-          docker push ghcr.io/jsisques/gardenia-backend:${{ env.TAG }}
+          docker tag jsisques/gardenia-backend:${{ env.TAG }} ghcr.io/${{ github.repository_owner }}/gardenia-backend:${{ env.TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/gardenia-backend:${{ env.TAG }}
 
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'success'
@@ -85,8 +85,8 @@ jobs:
 
       - name: Build and Push Docker Image to GitHub Container Registry (Alpine Node.js)
         run: |
-          docker tag jsisques/gardenia-backend:alpine-${{ env.TAG }} ghcr.io/jsisques/gardenia-backend:alpine-${{ env.TAG }}
-          docker push ghcr.io/jsisques/gardenia-backend:alpine-${{ env.TAG }}
+          docker tag jsisques/gardenia-backend:alpine-${{ env.TAG }} ghcr.io/${{ github.repository_owner }}/gardenia-backend:alpine-${{ env.TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/gardenia-backend:alpine-${{ env.TAG }}
 
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'success'

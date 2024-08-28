@@ -34,6 +34,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install hadolint
+        run: |
+          curl -sSfL https://github.com/hadolint/hadolint/releases/download/v2.15.0/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
+          chmod +x /usr/local/bin/hadolint
+
       - name: Run hadolint on all Dockerfiles
         id: hadolint
         run: |

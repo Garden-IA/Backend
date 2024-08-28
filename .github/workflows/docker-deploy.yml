@@ -28,6 +28,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
       - name: Notify Docker Login Status
         if: success()
         run: |
@@ -50,12 +57,15 @@ jobs:
             echo "TAG=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
           fi
 
-      - name: Build and Push Docker Image (Standard Node.js)
+      - name: Build and Push Docker Image to Docker Hub (Standard Node.js)
         run: |
           docker build -f docker/Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
           docker push jsisques/gardenia-backend:${{ env.TAG }}
-        continue-on-error: true
-        id: build-push-standard
+
+      - name: Build and Push Docker Image to GitHub Container Registry (Standard Node.js)
+        run: |
+          docker tag jsisques/gardenia-backend:${{ env.TAG }} ghcr.io/${{ github.repository_owner }}/gardenia-backend:${{ env.TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/gardenia-backend:${{ env.TAG }}
 
       - name: Notify Build and Push Status (Standard Node.js)
         if: steps.build-push-standard.outcome == 'success'
@@ -68,12 +78,15 @@ jobs:
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Failed to build and push standard Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Build and Push Docker Image (Alpine Node.js)
+      - name: Build and Push Docker Image to Docker Hub (Alpine Node.js)
         run: |
           docker build -f docker/Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
           docker push jsisques/gardenia-backend:alpine-${{ env.TAG }}
-        continue-on-error: true
-        id: build-push-alpine
+
+      - name: Build and Push Docker Image to GitHub Container Registry (Alpine Node.js)
+        run: |
+          docker tag jsisques/gardenia-backend:alpine-${{ env.TAG }} ghcr.io/${{ github.repository_owner }}/gardenia-backend:alpine-${{ env.TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/gardenia-backend:alpine-${{ env.TAG }}
 
       - name: Notify Build and Push Status (Alpine Node.js)
         if: steps.build-push-alpine.outcome == 'success'

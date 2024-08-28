@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         language: ['javascript-typescript']
-        build-mode: ['automatic']
+        build-mode: ['autobuild']
 
     steps:
       - name: Set Date and Time

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: config/logger.js</title>
+    <title>JSDoc: Source: config/multerConfig.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: config/logger.js</h1>
+    <h1 class="page-title">Source: config/multerConfig.js</h1>
 
     
 
@@ -26,53 +26,78 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @module config/logger
- * @description Configuración y creación del logger utilizando Winston.
- * Este módulo configura el logger para registrar mensajes tanto en la consola como en archivos de log.
- * Incluye rotación diaria de archivos y formato personalizado para los mensajes de log.
- */
+            <pre class="prettyprint source linenums"><code>// config/multerConfig.js
 
-const winston = require('winston');
-const { format, transports } = winston;
+const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const DailyRotateFile = require('winston-daily-rotate-file');
 
-// Crear el directorio 'logs' si no existe
-const logDirectory = path.join(__dirname, '../../logs');
-if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
+// Ruta donde se guardarán los archivos subidos
+const uploadDir = path.join(__dirname, '../uploads');
+
+// Verificar si la carpeta existe, si no, crearla
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Formato personalizado para los logs
-const customFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}]: ${message}`;
+/**
+ * Configuración del almacenamiento de Multer.
+ * Define dónde y cómo se guardarán los archivos subidos.
+ * @type {multer.StorageEngine}
+ */
+const storage = multer.diskStorage({
+  /**
+   * Especifica la carpeta de destino para los archivos subidos.
+   * @param {Express.Request} req - El objeto de solicitud de Express.
+   * @param {Express.Multer.File} file - El archivo que se está subiendo.
+   * @param {Function} cb - Callback para definir la ruta de destino.
+   */
+  destination: function (req, file, cb) {
+    cb(null, uploadDir); // Carpeta donde se almacenarán las imágenes
+  },
+  /**
+   * Define el nombre del archivo subido.
+   * @param {Express.Request} req - El objeto de solicitud de Express.
+   * @param {Express.Multer.File} file - El archivo que se está subiendo.
+   * @param {Function} cb - Callback para definir el nombre del archivo.
+   */
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Nombre único para cada imagen
+  },
 });
 
-// Configuración de Winston
-const logger = winston.createLogger({
-  level: 'debug', // Nivel mínimo de logs que se registran
-  format: format.combine(
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss', // Formato de la fecha y hora en los logs
-    }),
-    customFormat, // Aplicar formato personalizado
-  ),
-  transports: [
-    // Registrar logs en la consola
-    new transports.Console(),
-    // Registrar logs en archivos con rotación diaria
-    new DailyRotateFile({
-      filename: path.join(logDirectory, '%DATE%.log'),
-      datePattern: 'YYYY-MM-DD', // Patrón de fecha en el nombre del archivo
-      maxSize: '5m', // Tamaño máximo del archivo de log antes de rotar
-      maxFiles: '30d', // Número máximo de días para mantener los archivos de log
-    }),
-  ],
-});
+/**
+ * Filtro para permitir solo ciertos tipos de archivos.
+ * @param {Express.Request} req - El objeto de solicitud de Express.
+ * @param {Express.Multer.File} file - El archivo que se está subiendo.
+ * @param {Function} cb - Callback para aceptar o rechazar el archivo.
+ */
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
 
-module.exports = logger;
+  if (extname &amp;&amp; mimetype) {
+    cb(null, true); // Acepta el archivo
+  } else {
+    cb(new Error('Tipo de archivo no permitido')); // Rechaza el archivo
+  }
+};
+
+/**
+ * Configuración completa de Multer, incluyendo almacenamiento, filtro de archivos y límites de tamaño.
+ * @type {Object}
+ * @property {multer.StorageEngine} storage - Configuración del almacenamiento.
+ * @property {Function} fileFilter - Filtro para validar tipos de archivos.
+ * @property {Object} limits - Límites de tamaño de los archivos.
+ */
+const multerConfig = {
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 1024 * 1024 * 5 }, // Límite de 5MB por archivo
+};
+
+module.exports = multerConfig;
 </code></pre>
         </article>
     </section>

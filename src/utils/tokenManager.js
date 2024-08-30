@@ -1,3 +1,8 @@
+/**
+ * @module utils/tokenManager
+ * @description Definición de las funciones para la gestión de los tokens.
+ */
+
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/authConfig');
 

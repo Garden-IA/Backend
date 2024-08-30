@@ -1,3 +1,8 @@
+/**
+ * @module features/house/service
+ * @description Definición de los servicios de la casa.
+ */
+
 const House = require('./model'); // Ajusta la ruta según la ubicación del modelo
 const logger = require('../../config/logger');
 const User = require('../auth/model');

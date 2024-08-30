@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: config/logger.js</title>
+    <title>JSDoc: Source: middleware/loggerMiddleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: config/logger.js</h1>
+    <h1 class="page-title">Source: middleware/loggerMiddleware.js</h1>
 
     
 
@@ -27,52 +27,43 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @module config/logger
- * @description Configuración y creación del logger utilizando Winston.
- * Este módulo configura el logger para registrar mensajes tanto en la consola como en archivos de log.
- * Incluye rotación diaria de archivos y formato personalizado para los mensajes de log.
+ * @module middleware/loggerMiddleware
+ * @description Definición del middleware para el loggeo de las peticiones.
  */
 
-const winston = require('winston');
-const { format, transports } = winston;
-const path = require('path');
-const fs = require('fs');
-const DailyRotateFile = require('winston-daily-rotate-file');
+const logger = require('../config/logger');
 
-// Crear el directorio 'logs' si no existe
-const logDirectory = path.join(__dirname, '../../logs');
-if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
-}
+/**
+ * Middleware para registrar información relevante de una solicitud HTTP.
+ * @param {Object} req - El objeto de solicitud de Express.
+ * @param {Object} res - El objeto de respuesta de Express.
+ * @param {Function} next - La función para pasar el control al siguiente middleware.
+ */
+exports.logRequest = (req, res, next) => {
+  logger.debug('loggerMiddleware.js | Entrando en la función logRequest()');
+  const { method, url, headers, body, query, params } = req;
 
-// Formato personalizado para los logs
-const customFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}]: ${message}`;
-});
+  // Información básica de la solicitud
+  const logMessage = `
+        Method: ${method}
+        URL: ${url}
+        Headers: ${JSON.stringify(headers)}
+        Query: ${JSON.stringify(query)}
+        Params: ${JSON.stringify(params)}
+        Body: ${JSON.stringify(body)}
+    `;
 
-// Configuración de Winston
-const logger = winston.createLogger({
-  level: 'debug', // Nivel mínimo de logs que se registran
-  format: format.combine(
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss', // Formato de la fecha y hora en los logs
-    }),
-    customFormat, // Aplicar formato personalizado
-  ),
-  transports: [
-    // Registrar logs en la consola
-    new transports.Console(),
-    // Registrar logs en archivos con rotación diaria
-    new DailyRotateFile({
-      filename: path.join(logDirectory, '%DATE%.log'),
-      datePattern: 'YYYY-MM-DD', // Patrón de fecha en el nombre del archivo
-      maxSize: '5m', // Tamaño máximo del archivo de log antes de rotar
-      maxFiles: '30d', // Número máximo de días para mantener los archivos de log
-    }),
-  ],
-});
+  // Loggeamos la información
+  logger.debug(`loggerMiddleware.js | Method: ${method}`);
+  logger.debug(`loggerMiddleware.js | URL: ${url}`);
+  logger.debug(`loggerMiddleware.js | Headers: ${JSON.stringify(headers)}`);
+  logger.debug(`loggerMiddleware.js | Query: ${JSON.stringify(query)}`);
+  logger.debug(`loggerMiddleware.js | Params: ${JSON.stringify(params)}`);
+  logger.debug(`loggerMiddleware.js | Body: ${JSON.stringify(body)}`);
 
-module.exports = logger;
+  // Pasamos al siguiente middleware
+  next();
+};
 </code></pre>
         </article>
     </section>

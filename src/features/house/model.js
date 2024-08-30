@@ -1,3 +1,8 @@
+/**
+ * @module features/house/model
+ * @description Definición del esquema del modelo de casa para MongoDB utilizando Mongoose.
+ */
+
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 

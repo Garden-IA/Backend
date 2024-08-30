@@ -1,3 +1,8 @@
+/**
+ * @module middleware/loggerMiddleware
+ * @description Definición del middleware para el loggeo de las peticiones.
+ */
+
 const logger = require('../config/logger');
 
 /**

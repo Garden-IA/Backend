@@ -1,5 +1,19 @@
 const Room = require('../../../../src/features/room/model');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const { connect, disconnect } = require('mongoose');
+
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+});
+
+afterAll(async () => {
+  await disconnect();
+  await mongoServer.stop();
+});
 
 describe('Room Model', () => {
   it('should create a room with required fields', async () => {

@@ -1,3 +1,8 @@
+/**
+ * @module features/house/controller
+ * @description Definición del controlador para las casas.
+ */
+
 const houseService = require('./service');
 const logger = require('../../config/logger');
 

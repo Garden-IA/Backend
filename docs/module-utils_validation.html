@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: config/authConfig</title>
+    <title>JSDoc: Module: utils/validation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: config/authConfig</h1>
+    <h1 class="page-title">Module: utils/validation</h1>
 
     
 
@@ -38,8 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Configuración para la autenticación basada en JWT (JSON Web Token).
-Este módulo exporta las configuraciones necesarias para manejar tokens JWT, incluyendo el secreto y el tiempo de expiración.</p></div>
+            <div class="description"><p>Definición de las funcionesde validación.</p></div>
         
 
         
@@ -88,7 +87,7 @@ Este módulo exporta las configuraciones necesarias para manejar tokens JWT, inc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="config_authConfig.js.html">config/authConfig.js</a>, <a href="config_authConfig.js.html#line1">line 1</a>
+        <a href="utils_validation.js.html">utils/validation.js</a>, <a href="utils_validation.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -135,31 +134,157 @@ Este módulo exporta las configuraciones necesarias para manejar tokens JWT, inc
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id=".JWT_EXPIRES_IN"><span class="type-signature">(static) </span>JWT_EXPIRES_IN<span class="type-signature"> :string</span></h4>
 
+    
+
+    
+    <h4 class="name" id=".validateRegisterInput"><span class="type-signature">(static) </span>validateRegisterInput<span class="signature">(data)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    <p>Tiempo de expiración de los tokens JWT.
-Este valor define cuánto tiempo es válido un token antes de que expire.</p>
+    <p>Valida la entrada para el registro de un usuario.</p>
+<p>Esta función verifica que se hayan proporcionado un nombre de usuario y una contraseña.
+Si faltan alguno de estos campos, se devuelve un objeto de errores.</p>
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Los datos de entrada para la validación.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>username</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">string</span>
 
 
-        </li>
-    </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>El nombre de usuario proporcionado para el registro.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>La contraseña proporcionada para el registro.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -190,16 +315,11 @@ Este valor define cuánto tiempo es válido un token antes de que expire.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>'1h' (1 hora)</li>
-        </ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="config_authConfig.js.html">config/authConfig.js</a>, <a href="config_authConfig.js.html#line22">line 22</a>
+        <a href="utils_validation.js.html">utils/validation.js</a>, <a href="utils_validation.js.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -215,87 +335,47 @@ Este valor define cuánto tiempo es válido un token antes de que expire.</p>
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
-            
-<h4 class="name" id=".JWT_SECRET"><span class="type-signature">(static) </span>JWT_SECRET<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>Clave secreta utilizada para firmar los tokens JWT.
-Se toma del entorno de variables (process.env.JWT_SECRET) o se usa un valor predeterminado si no está definida.</p>
+<div class="param-desc">
+    <p>Un objeto que contiene:</p>
+<ul>
+<li>{Object} errors - Un objeto con mensajes de error si hay campos faltantes.</li>
+<li>{boolean} isValid - Un valor booleano que indica si la entrada es válida o no.</li>
+</ul>
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
 
 
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>'your_jwt_secret'</li>
-        </ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="config_authConfig.js.html">config/authConfig.js</a>, <a href="config_authConfig.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
+    </dd>
 </dl>
 
+    
 
 
 
 
 
         
-    
-
     
 
     

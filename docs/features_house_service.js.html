@@ -26,19 +26,26 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const House = require('./model'); // Ajusta la ruta según la ubicación del modelo
+            <pre class="prettyprint source linenums"><code>/**
+ * @module features/house/service
+ * @description Definición de los servicios de la casa.
+ */
+
+const House = require('./model'); // Ajusta la ruta según la ubicación del modelo
 const logger = require('../../config/logger');
+const User = require('../auth/model');
 
 /**
- * Crea una nueva casa.
+ * Crea una nueva casa y la asocia al usuario especificado.
  *
  * @param {string} name - El nombre de la casa.
  * @param {string} location - La ubicación de la casa.
  * @param {string} [description] - Una descripción opcional de la casa.
+ * @param {string} userId - El ID del usuario que está creando la casa.
  * @returns {Promise&lt;House>} - Una promesa que resuelve con el objeto de la casa creada.
  * @throws {Error} - Si ocurre un error al crear la casa.
  */
-exports.createHouse = async (name, location, description) => {
+exports.createHouse = async (name, location, description, userId) => {
   logger.info('service.js | Entrando en la función createHouse()');
 
   try {
@@ -46,10 +53,13 @@ exports.createHouse = async (name, location, description) => {
     const house = new House({ name, location, description });
 
     // Guardar la nueva casa en la base de datos
-    await house.save();
+    const savedHouse = await house.save();
 
-    logger.info(`service.js | Casa con nombre ${name} creada con éxito`);
-    return house;
+    // Actualizar el array de houses del usuario con la nueva casa
+    await User.findByIdAndUpdate(userId, { $push: { houses: savedHouse._id } }, { new: true, useFindAndModify: false });
+
+    logger.info(`service.js | Casa con nombre ${name} creada y añadida al usuario con ID ${userId}`);
+    return savedHouse;
   } catch (error) {
     logger.error(`service.js | Error al crear casa con nombre ${name}`);
     logger.debug(`service.js | Error: ${error.message}`);
@@ -155,6 +165,9 @@ exports.deleteHouse = async id => {
       throw new Error('House not found');
     }
 
+    // También deberíamos eliminar la casa de la lista de casas del usuario
+    await User.updateMany({ houses: id }, { $pull: { houses: id } });
+
     logger.info(`service.js | Casa con ID ${id} eliminada con éxito`);
   } catch (error) {
     logger.error(`service.js | Error al eliminar casa con ID ${id}`);
@@ -172,13 +185,13 @@ exports.deleteHouse = async id => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createHouse">createHouse</a></li><li><a href="global.html#createdAt">createdAt</a></li><li><a href="global.html#deleteHouse">deleteHouse</a></li><li><a href="global.html#description">description</a></li><li><a href="global.html#getAllHouses">getAllHouses</a></li><li><a href="global.html#getHouseById">getHouseById</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#location">location</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#rooms">rooms</a></li><li><a href="global.html#updateHouse">updateHouse</a></li><li><a href="global.html#updateProfile">updateProfile</a></li><li><a href="global.html#updatedAt">updatedAt</a></li><li><a href="global.html#validateRegisterInput">validateRegisterInput</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li><li><a href="module-features_auth_service.html">features/auth/service</a></li><li><a href="module-features_house_controller.html">features/house/controller</a></li><li><a href="module-features_house_model.html">features/house/model</a></li><li><a href="module-features_house_service.html">features/house/service</a></li><li><a href="module-features_room_controller.html">features/room/controller</a></li><li><a href="module-features_room_model.html">features/room/model</a></li><li><a href="module-features_room_service.html">features/room/service</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-middleware_loggerMiddleware.html">middleware/loggerMiddleware</a></li><li><a href="module-utils_tokenManager.html">utils/tokenManager</a></li><li><a href="module-utils_validation.html">utils/validation</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destination">destination</a></li><li><a href="global.html#fileFilter">fileFilter</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#multerConfig">multerConfig</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#upload">upload</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Aug 27 2024 17:48:39 GMT+0200 (hora de verano de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri Aug 30 2024 15:40:02 GMT+0200 (hora de verano de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

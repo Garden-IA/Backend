@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/room/service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/room/service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @module features/room/service
  * @description Definición de los servicios para las habitaciones.
  */
@@ -17,8 +45,8 @@ const logger = require('../../config/logger');
  * @param {boolean} radiator - Indica si hay radiador en la habitación.
  * @param {string} light - El nivel de luz en la habitación ('low', 'medium', 'high').
  * @param {string} houseId - El ID de la casa a la que pertenece la habitación.
- * @param {Array<string>} plants - Array de IDs de plantas en la habitación.
- * @returns {Promise<Room>} - Una promesa que resuelve con el objeto de la habitación creada.
+ * @param {Array&lt;string>} plants - Array de IDs de plantas en la habitación.
+ * @returns {Promise&lt;Room>} - Una promesa que resuelve con el objeto de la habitación creada.
  * @throws {Error} - Si ocurre un error al crear la habitación.
  */
 exports.createRoom = async (name, type, humidity, airConditioner, radiator, light, houseId, plants) => {
@@ -46,7 +74,7 @@ exports.createRoom = async (name, type, humidity, airConditioner, radiator, ligh
 /**
  * Obtiene todas las habitaciones.
  *
- * @returns {Promise<Array<Room>>} - Una promesa que resuelve con un array de objetos de habitaciones.
+ * @returns {Promise&lt;Array&lt;Room>>} - Una promesa que resuelve con un array de objetos de habitaciones.
  * @throws {Error} - Si ocurre un error al recuperar las habitaciones.
  */
 exports.getAllRooms = async () => {
@@ -69,7 +97,7 @@ exports.getAllRooms = async () => {
  * Obtiene una habitación por su ID.
  *
  * @param {string} id - El ID de la habitación a recuperar.
- * @returns {Promise<Room>} - Una promesa que resuelve con el objeto de la habitación encontrada.
+ * @returns {Promise&lt;Room>} - Una promesa que resuelve con el objeto de la habitación encontrada.
  * @throws {Error} - Si la habitación no se encuentra o si ocurre un error al recuperarla.
  */
 exports.getRoomById = async id => {
@@ -98,7 +126,7 @@ exports.getRoomById = async id => {
  *
  * @param {string} id - El ID de la habitación a actualizar.
  * @param {Object} updates - Los datos de actualización para la habitación.
- * @returns {Promise<Room>} - Una promesa que resuelve con el objeto de la habitación actualizada.
+ * @returns {Promise&lt;Room>} - Una promesa que resuelve con el objeto de la habitación actualizada.
  * @throws {Error} - Si la habitación no se encuentra o si ocurre un error al actualizarla.
  */
 exports.updateRoom = async (id, updates) => {
@@ -126,7 +154,7 @@ exports.updateRoom = async (id, updates) => {
  * Elimina una habitación por su ID.
  *
  * @param {string} id - El ID de la habitación a eliminar.
- * @returns {Promise<void>} - Una promesa que se resuelve cuando la habitación ha sido eliminada.
+ * @returns {Promise&lt;void>} - Una promesa que se resuelve cuando la habitación ha sido eliminada.
  * @throws {Error} - Si la habitación no se encuentra o si ocurre un error al eliminarla.
  */
 exports.deleteRoom = async id => {
@@ -151,3 +179,26 @@ exports.deleteRoom = async id => {
     throw error; // Re-lanzar el error para que el controlador lo maneje
   }
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li><li><a href="module-features_auth_service.html">features/auth/service</a></li><li><a href="module-features_house_controller.html">features/house/controller</a></li><li><a href="module-features_house_model.html">features/house/model</a></li><li><a href="module-features_house_service.html">features/house/service</a></li><li><a href="module-features_room_controller.html">features/room/controller</a></li><li><a href="module-features_room_model.html">features/room/model</a></li><li><a href="module-features_room_service.html">features/room/service</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-middleware_loggerMiddleware.html">middleware/loggerMiddleware</a></li><li><a href="module-utils_tokenManager.html">utils/tokenManager</a></li><li><a href="module-utils_validation.html">utils/validation</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destination">destination</a></li><li><a href="global.html#fileFilter">fileFilter</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#multerConfig">multerConfig</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#upload">upload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri Aug 30 2024 15:40:02 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,3 +1,8 @@
+/**
+ * @module middleware/auth
+ * @description Definición de las funciones para la autenticación de usuarios.
+ */
+
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/authConfig');
 const logger = require('../config/logger');

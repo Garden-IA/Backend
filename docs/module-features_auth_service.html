@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: features/auth/controller</title>
+    <title>JSDoc: Module: features/auth/service</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: features/auth/controller</h1>
+    <h1 class="page-title">Module: features/auth/service</h1>
 
     
 
@@ -38,8 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Controlador para la gestión de autenticación de usuarios.
-Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesión, obtención y actualización del perfil de usuario.</p></div>
+            <div class="description"><p>Definición de los servicios de autenticación.</p></div>
         
 
         
@@ -88,7 +87,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="features_auth_controller.js.html">features/auth/controller.js</a>, <a href="features_auth_controller.js.html#line1">line 1</a>
+        <a href="features_auth_service.js.html">features/auth/service.js</a>, <a href="features_auth_service.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -145,7 +144,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
 
     
-    <h4 class="name" id="~getProfile"><span class="type-signature">(inner) </span>getProfile<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".getProfile"><span class="type-signature">(static) </span>getProfile<span class="signature">(id)</span><span class="type-signature"> &rarr; {Promise.&lt;User>}</span></h4>
     
 
     
@@ -153,7 +152,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 <div class="description">
-    <p>Maneja la solicitud para obtener el perfil del usuario.</p>
+    <p>Obtiene el perfil de un usuario por su ID.</p>
 </div>
 
 
@@ -189,13 +188,13 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -205,30 +204,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de solicitud Express.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>El objeto de respuesta Express.</p></td>
+            <td class="description last"><p>El ID del usuario.</p></td>
         </tr>
 
     
@@ -269,7 +245,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="features_auth_controller.js.html">features/auth/controller.js</a>, <a href="features_auth_controller.js.html#line62">line 62</a>
+        <a href="features_auth_service.js.html">features/auth/service.js</a>, <a href="features_auth_service.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -292,11 +268,48 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <ul>
+<li>Si el usuario no se encuentra.</li>
+</ul>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <ul>
+<li>Una promesa que resuelve con el documento del usuario.</li>
+</ul>
+</div>
+
 
 
 <dl>
@@ -305,7 +318,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;User></span>
 
 
     </dd>
@@ -323,7 +336,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
 
     
-    <h4 class="name" id="~login"><span class="type-signature">(inner) </span>login<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".login"><span class="type-signature">(static) </span>login<span class="signature">(email, password)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
     
 
     
@@ -331,7 +344,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 <div class="description">
-    <p>Maneja la solicitud para iniciar sesión de un usuario.</p>
+    <p>Inicia sesión de un usuario y genera un token JWT.</p>
 </div>
 
 
@@ -367,13 +380,13 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -383,20 +396,20 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de solicitud Express.</p></td>
+            <td class="description last"><p>El correo electrónico del usuario.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -406,7 +419,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de respuesta Express.</p></td>
+            <td class="description last"><p>La contraseña del usuario.</p></td>
         </tr>
 
     
@@ -447,7 +460,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="features_auth_controller.js.html">features/auth/controller.js</a>, <a href="features_auth_controller.js.html#line36">line 36</a>
+        <a href="features_auth_service.js.html">features/auth/service.js</a>, <a href="features_auth_service.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -470,11 +483,48 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <ul>
+<li>Si el usuario no se encuentra o las credenciales son inválidas.</li>
+</ul>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <ul>
+<li>Una promesa que resuelve con un objeto que contiene los detalles del usuario y el token JWT.</li>
+</ul>
+</div>
+
 
 
 <dl>
@@ -483,7 +533,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;Object></span>
 
 
     </dd>
@@ -501,7 +551,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
 
     
-    <h4 class="name" id="~register"><span class="type-signature">(inner) </span>register<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".register"><span class="type-signature">(static) </span>register<span class="signature">(email, password)</span><span class="type-signature"> &rarr; {Promise.&lt;User>}</span></h4>
     
 
     
@@ -509,7 +559,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 <div class="description">
-    <p>Maneja la solicitud para registrar un nuevo usuario.</p>
+    <p>Registra un nuevo usuario.</p>
 </div>
 
 
@@ -545,13 +595,13 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -561,20 +611,20 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de solicitud Express.</p></td>
+            <td class="description last"><p>El correo electrónico del nuevo usuario.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -584,7 +634,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de respuesta Express.</p></td>
+            <td class="description last"><p>La contraseña del nuevo usuario.</p></td>
         </tr>
 
     
@@ -625,7 +675,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="features_auth_controller.js.html">features/auth/controller.js</a>, <a href="features_auth_controller.js.html#line10">line 10</a>
+        <a href="features_auth_service.js.html">features/auth/service.js</a>, <a href="features_auth_service.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -648,11 +698,48 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <ul>
+<li>Si ya existe un usuario con el correo electrónico proporcionado.</li>
+</ul>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <ul>
+<li>Una promesa que resuelve con el nuevo usuario registrado.</li>
+</ul>
+</div>
+
 
 
 <dl>
@@ -661,7 +748,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;User></span>
 
 
     </dd>
@@ -679,7 +766,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
 
     
-    <h4 class="name" id="~updateProfile"><span class="type-signature">(inner) </span>updateProfile<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".updateProfile"><span class="type-signature">(static) </span>updateProfile<span class="signature">(userId, updates)</span><span class="type-signature"> &rarr; {Promise.&lt;User>}</span></h4>
     
 
     
@@ -687,7 +774,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 <div class="description">
-    <p>Maneja la solicitud para actualizar el perfil del usuario.</p>
+    <p>Actualiza el perfil de un usuario por su ID.</p>
 </div>
 
 
@@ -723,13 +810,13 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>userId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -739,14 +826,14 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de solicitud Express.</p></td>
+            <td class="description last"><p>El ID del usuario a actualizar.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>updates</code></td>
             
 
             <td class="type">
@@ -762,7 +849,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
             
 
-            <td class="description last"><p>El objeto de respuesta Express.</p></td>
+            <td class="description last"><p>Un objeto que contiene los campos a actualizar.</p></td>
         </tr>
 
     
@@ -803,7 +890,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="features_auth_controller.js.html">features/auth/controller.js</a>, <a href="features_auth_controller.js.html#line86">line 86</a>
+        <a href="features_auth_service.js.html">features/auth/service.js</a>, <a href="features_auth_service.js.html#line105">line 105</a>
     </li></ul></dd>
     
 
@@ -826,11 +913,48 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <ul>
+<li>Si el usuario no se encuentra.</li>
+</ul>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <ul>
+<li>Una promesa que resuelve con el usuario actualizado.</li>
+</ul>
+</div>
+
 
 
 <dl>
@@ -839,7 +963,7 @@ Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesi
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;User></span>
 
 
     </dd>

@@ -1,3 +1,8 @@
+/**
+ * @module features/auth/service
+ * @description Definición de los servicios de autenticación.
+ */
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('./model');

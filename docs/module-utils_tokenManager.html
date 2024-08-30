@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: config/logger.js</title>
+    <title>JSDoc: Module: utils/tokenManager</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,65 +17,297 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: config/logger.js</h1>
+    <h1 class="page-title">Module: utils/tokenManager</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @module config/logger
- * @description Configuración y creación del logger utilizando Winston.
- * Este módulo configura el logger para registrar mensajes tanto en la consola como en archivos de log.
- * Incluye rotación diaria de archivos y formato personalizado para los mensajes de log.
- */
+        
+            
+        
+    
+</header>
 
-const winston = require('winston');
-const { format, transports } = winston;
-const path = require('path');
-const fs = require('fs');
-const DailyRotateFile = require('winston-daily-rotate-file');
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Definición de las funciones para la gestión de los tokens.</p></div>
+        
 
-// Crear el directorio 'logs' si no existe
-const logDirectory = path.join(__dirname, '../../logs');
-if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
-}
+        
+            
 
-// Formato personalizado para los logs
-const customFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}]: ${message}`;
-});
 
-// Configuración de Winston
-const logger = winston.createLogger({
-  level: 'debug', // Nivel mínimo de logs que se registran
-  format: format.combine(
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss', // Formato de la fecha y hora en los logs
-    }),
-    customFormat, // Aplicar formato personalizado
-  ),
-  transports: [
-    // Registrar logs en la consola
-    new transports.Console(),
-    // Registrar logs en archivos con rotación diaria
-    new DailyRotateFile({
-      filename: path.join(logDirectory, '%DATE%.log'),
-      datePattern: 'YYYY-MM-DD', // Patrón de fecha en el nombre del archivo
-      maxSize: '5m', // Tamaño máximo del archivo de log antes de rotar
-      maxFiles: '30d', // Número máximo de días para mantener los archivos de log
-    }),
-  ],
-});
 
-module.exports = logger;
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_tokenManager.js.html">utils/tokenManager.js</a>, <a href="utils_tokenManager.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".generateToken"><span class="type-signature">(static) </span>generateToken<span class="signature">(user)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Genera un JWT para un usuario.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>El objeto del usuario.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_tokenManager.js.html">utils/tokenManager.js</a>, <a href="utils_tokenManager.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>El token JWT.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

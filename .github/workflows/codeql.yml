@@ -1,0 +1,67 @@
+name: 'CodeQL'
+
+on:
+  pull_request:
+    branches:
+      - release/*
+      - dev
+      - master
+  schedule:
+    - cron: '40 2 * * 6'
+
+jobs:
+  analyze:
+    name: Analyze (JavaScript/TypeScript)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript']
+        build-mode: ['none'] # No build required for this project
+
+    steps:
+      - name: Set Date and Time
+        id: datetime
+        run: echo "CURRENT_DATETIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Notify Start
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | 🔄 CodeQL analysis started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
+
+      - name: Notify Analysis Completion
+        if: success() || failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ CodeQL analysis completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Analysis Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ CodeQL analysis failed for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}

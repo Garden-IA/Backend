@@ -1,0 +1,107 @@
+name: CI/CD for Docker Images
+
+on:
+  push:
+    branches:
+      - release/*
+      - dev
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Date and Time
+        id: datetime
+        run: echo "CURRENT_DATETIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Notify Start
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | 🔄 Workflow started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Notify Docker Login Status
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Docker login succeeded"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+      - name: Notify Docker Login Status
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Docker login failed"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Determine tag
+        id: determine_tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/heads/master ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/heads/dev ]]; then
+            echo "TAG=dev" >> $GITHUB_ENV
+          else
+            echo "TAG=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
+          fi
+
+      - name: Build and Push Docker Image to Docker Hub (Standard Node.js)
+        run: |
+          docker build -f docker/Dockerfile -t jsisques/gardenia-backend:${{ env.TAG }} .
+          docker push jsisques/gardenia-backend:${{ env.TAG }}
+
+      - name: Build and Push Docker Image to GitHub Container Registry (Standard Node.js)
+        run: |
+          LOWERCASE_REPO_NAME=$(echo "${{ github.repository_owner }}/gardenia-backend" | tr '[:upper:]' '[:lower:]')
+          docker tag jsisques/gardenia-backend:${{ env.TAG }} ghcr.io/$LOWERCASE_REPO_NAME:${{ env.TAG }}
+          docker push ghcr.io/$LOWERCASE_REPO_NAME:${{ env.TAG }}
+
+      - name: Notify Build and Push Status (Standard Node.js)
+        if: steps.build-push-standard.outcome == 'success'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Built and pushed standard Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+      - name: Notify Build and Push Status (Standard Node.js)
+        if: steps.build-push-standard.outcome == 'failure'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Failed to build and push standard Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Build and Push Docker Image to Docker Hub (Alpine Node.js)
+        run: |
+          docker build -f docker/Dockerfile-alpine -t jsisques/gardenia-backend:alpine-${{ env.TAG }} .
+          docker push jsisques/gardenia-backend:alpine-${{ env.TAG }}
+
+      - name: Build and Push Docker Image to GitHub Container Registry (Alpine Node.js)
+        run: |
+          LOWERCASE_REPO_NAME=$(echo "${{ github.repository_owner }}/gardenia-backend" | tr '[:upper:]' '[:lower:]')
+          docker tag jsisques/gardenia-backend:alpine-${{ env.TAG }} ghcr.io/$LOWERCASE_REPO_NAME:alpine-${{ env.TAG }}
+          docker push ghcr.io/$LOWERCASE_REPO_NAME:alpine-${{ env.TAG }}
+
+      - name: Notify Build and Push Status (Alpine Node.js)
+        if: steps.build-push-alpine.outcome == 'success'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Built and pushed Alpine Node.js image successfully"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+      - name: Notify Build and Push Status (Alpine Node.js)
+        if: steps.build-push-alpine.outcome == 'failure'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Failed to build and push Alpine Node.js image"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Completion
+        if: success() || failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Workflow completed for commit: ${{ github.sha }} on branch: ${{ github.ref }} with status: ${{ job.status }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,0 +1,70 @@
+name: Hadolint
+
+on:
+  pull_request:
+    branches:
+      - release/*
+      - dev
+      - master
+  schedule:
+    - cron: '36 6 * * 0'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  hadolint:
+    name: Run hadolint scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+
+    steps:
+      - name: Set Date and Time
+        id: datetime
+        run: echo "CURRENT_DATETIME=$(date +'%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Notify Start
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | 🔄 Hadolint scanning started for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install hadolint
+        run: |
+          curl -sSfL https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
+          chmod +x /usr/local/bin/hadolint
+
+      - name: Run hadolint on all Dockerfiles
+        id: hadolint
+        run: |
+          mkdir -p hadolint-results
+          for dockerfile in ./docker/*; do
+            if [[ -f "$dockerfile" ]]; then
+              echo "Running hadolint on $dockerfile"
+              hadolint -f sarif "$dockerfile" > "hadolint-results/$(basename $dockerfile).sarif"
+            fi
+          done
+          # Combine all SARIF files into one
+          jq -s 'add' hadolint-results/*.sarif > hadolint-results/combined-results.sarif
+          ls -la hadolint-results/
+
+      - name: Upload combined SARIF results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: hadolint-results/combined-results.sarif
+          wait-for-processing: true
+
+      - name: Notify Upload Status
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ✅ Hadolint scanning completed and results uploaded successfully for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Upload Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ env.CURRENT_DATETIME }} | ❌ Hadolint scanning failed or results could not be uploaded for commit: ${{ github.sha }} on branch: ${{ github.ref }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}

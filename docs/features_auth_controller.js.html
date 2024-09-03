@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/auth/controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/auth/controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module features/auth/controller
+ * @description Controlador para la gestión de autenticación de usuarios.
+ * Este módulo maneja las solicitudes relacionadas con el registro, inicio de sesión, obtención y actualización del perfil de usuario.
+ */
+
+const authService = require('./service');
+const logger = require('../../config/logger');
+
+/**
+ * Maneja la solicitud para registrar un nuevo usuario.
+ *
+ * @function register
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
+exports.register = async (req, res) => {
+  logger.info('controller.js | Entrando en la función register()');
+  const { email, password } = req.body;
+
+  logger.debug(`controller.js | Email: ${email}`);
+  logger.debug(`controller.js | Contraseña: ${password}`);
+
+  try {
+    await authService.register(email, password);
+    logger.info(`controller.js | Usuario con email ${email} registrado con éxito`);
+    res.status(201).json({ message: 'Usuario creado' });
+  } catch (error) {
+    logger.error(`controller.js | Error al registrar usuario con email ${email}`);
+    logger.debug(`controller.js | Error: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * Maneja la solicitud para iniciar sesión de un usuario.
+ *
+ * @function login
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
+exports.login = async (req, res) => {
+  logger.info('controller.js | Entrando en la función login()');
+  const { email, password } = req.body;
+
+  logger.debug(`controller.js | Email: ${email}`);
+  logger.debug(`controller.js | Contraseña: ${password}`);
+
+  try {
+    const result = await authService.login(email, password);
+    logger.info(`controller.js | Usuario ${email} inició sesión con éxito`);
+    res.json(result);
+  } catch (error) {
+    logger.error('controller.js | Error al iniciar sesión');
+    logger.debug(`controller.js | Error: ${error.message}`);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+/**
+ * Maneja la solicitud para obtener el perfil del usuario.
+ *
+ * @function getProfile
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
+exports.getProfile = async (req, res) => {
+  logger.info('controller.js | Entrando en la función getProfile()');
+  try {
+    const { id } = req.body; // Suponiendo que el ID del usuario esté en req.body
+    logger.debug(`controller.js | ID del usuario: ${id}`);
+
+    const userProfile = await authService.getProfile(id);
+    logger.info(`controller.js | Perfil del usuario con ID ${id} obtenido con éxito`);
+    res.json(userProfile);
+  } catch (error) {
+    logger.error('controller.js | Error al obtener el perfil');
+    logger.debug(`controller.js | Error: ${error.message}`);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+};
+
+/**
+ * Maneja la solicitud para actualizar el perfil del usuario.
+ *
+ * @function updateProfile
+ * @param {Object} req - El objeto de solicitud Express.
+ * @param {Object} res - El objeto de respuesta Express.
+ * @returns {void}
+ */
+exports.updateProfile = async (req, res) => {
+  logger.info('controller.js | Entrando en la función updateProfile()');
+  try {
+    const { id } = req.body; // Suponiendo que el ID del usuario esté en req.body
+    const updates = req.body;
+
+    logger.debug(`controller.js | ID del usuario: ${id}`);
+    logger.debug(`controller.js | Actualizaciones: ${JSON.stringify(updates)}`);
+
+    const updatedUser = await authService.updateProfile(id, updates);
+    logger.info(`controller.js | Perfil del usuario con ID ${id} actualizado con éxito`);
+    res.json(updatedUser);
+  } catch (error) {
+    logger.error('controller.js | Error al actualizar el perfil');
+    logger.debug(`controller.js | Error: ${error.message}`);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_authConfig.html">config/authConfig</a></li><li><a href="module-config_database.html">config/database</a></li><li><a href="module-config_logger.html">config/logger</a></li><li><a href="module-config_swagger.html">config/swagger</a></li><li><a href="module-features_auth_controller.html">features/auth/controller</a></li><li><a href="module-features_auth_model.html">features/auth/model</a></li><li><a href="module-features_auth_service.html">features/auth/service</a></li><li><a href="module-features_house_controller.html">features/house/controller</a></li><li><a href="module-features_house_model.html">features/house/model</a></li><li><a href="module-features_house_service.html">features/house/service</a></li><li><a href="module-features_room_controller.html">features/room/controller</a></li><li><a href="module-features_room_model.html">features/room/model</a></li><li><a href="module-features_room_service.html">features/room/service</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-middleware_loggerMiddleware.html">middleware/loggerMiddleware</a></li><li><a href="module-utils_tokenManager.html">utils/tokenManager</a></li><li><a href="module-utils_validation.html">utils/validation</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destination">destination</a></li><li><a href="global.html#fileFilter">fileFilter</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#getProfile">getProfile</a></li><li><a href="global.html#multerConfig">multerConfig</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#upload">upload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri Aug 30 2024 15:40:02 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

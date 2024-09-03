@@ -70,11 +70,17 @@ exports.login = async (req, res) => {
 exports.getProfile = async (req, res) => {
   logger.info('controller.js | Entrando en la función getProfile()');
   try {
-    const { id } = req.body; // Suponiendo que el ID del usuario esté en req.body
-    logger.debug(`controller.js | ID del usuario: ${id}`);
+    const userId = req.userId;
+    logger.debug(`controller.js | ID del usuario: ${userId}`);
 
-    const userProfile = await authService.getProfile(id);
-    logger.info(`controller.js | Perfil del usuario con ID ${id} obtenido con éxito`);
+    // Asegúrate de que el userId esté disponible y sea válido antes de llamar al servicio
+    if (!userId) {
+      logger.warn('controller.js | ID del usuario no proporcionado');
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    const userProfile = await authService.getProfile(userId);
+    logger.info(`controller.js | Perfil del usuario con ID ${userId} obtenido con éxito`);
     res.json(userProfile);
   } catch (error) {
     logger.error('controller.js | Error al obtener el perfil');
@@ -94,14 +100,21 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   logger.info('controller.js | Entrando en la función updateProfile()');
   try {
-    const { id } = req.body; // Suponiendo que el ID del usuario esté en req.body
+    const userId = req.userId;
+    logger.debug(`controller.js | ID del usuario: ${userId}`);
+
+    // Asegúrate de que el userId esté disponible y sea válido antes de llamar al servicio
+    if (!userId) {
+      logger.warn('controller.js | ID del usuario no proporcionado');
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
     const updates = req.body;
 
-    logger.debug(`controller.js | ID del usuario: ${id}`);
     logger.debug(`controller.js | Actualizaciones: ${JSON.stringify(updates)}`);
 
-    const updatedUser = await authService.updateProfile(id, updates);
-    logger.info(`controller.js | Perfil del usuario con ID ${id} actualizado con éxito`);
+    const updatedUser = await authService.updateProfile(userId, updates);
+    logger.info(`controller.js | Perfil del usuario con ID ${userId} actualizado con éxito`);
     res.json(updatedUser);
   } catch (error) {
     logger.error('controller.js | Error al actualizar el perfil');
